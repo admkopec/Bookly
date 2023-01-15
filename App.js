@@ -6,26 +6,48 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {Node} from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import SearchView from "./Views/SearchView";
-import BookingsView from "./Views/BookingsView";
-import AccountView from "./Views/AccountView";
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import SearchView from './Views/SearchView';
+import BookingsView from './Views/BookingsView';
+import AccountView from './Views/AccountView';
+import SelectionView from './Views/LoginViews/SelectionView';
 
 const Tab = createBottomTabNavigator();
 
 const App: () => Node = () => {
-  return (
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  if (isSignedIn) {
+    return (
       <NavigationContainer>
-          <Tab.Navigator screenOptions={{ headerShown: false }}>
-              <Tab.Screen name="Search" options={{ headerLargeTitle: true }} component={SearchView}/>
-              <Tab.Screen name="Bookings" options={{ headerLargeTitle: true }} component={BookingsView}/>
-              <Tab.Screen name="Account" options={{ headerLargeTitle: true }} component={AccountView}/>
-          </Tab.Navigator>
+        <Tab.Navigator screenOptions={{headerShown: false}}>
+          <Tab.Screen
+            name="Search"
+            options={{headerLargeTitle: true}}
+            component={SearchView}
+          />
+          <Tab.Screen
+            name="Bookings"
+            options={{headerLargeTitle: true}}
+            component={BookingsView}
+          />
+          <Tab.Screen
+            name="Account"
+            options={{headerLargeTitle: true}}
+            component={AccountView}
+          />
+        </Tab.Navigator>
       </NavigationContainer>
-  );
+    );
+  } else {
+    return (
+      <NavigationContainer>
+        <SelectionView />
+      </NavigationContainer>
+    );
+  }
 };
 
 export default App;
