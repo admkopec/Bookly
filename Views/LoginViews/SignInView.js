@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createRef} from 'react';
 import {
   Button,
   KeyboardAvoidingView,
@@ -14,31 +14,42 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {Node} from 'react';
+import {login} from '../../Logic/AccountLogic';
 
 const SignInView = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const containerStyle = {
+    flex: 1,
+    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
   };
 
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
+  };
+
+  const email = createRef();
+  const password = createRef();
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+    <SafeAreaView style={containerStyle}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+        style={containerStyle}>
+        <View style={backgroundStyle}>
           <Text>Bookly</Text>
-          <TextInput placeholder="Email" />
-          <TextInput placeholder="Password" />
-          <Button title="Sign In" onPress={() => {}} />
+          <TextInput ref={email} placeholder="Email" />
+          <TextInput ref={password} placeholder="Password" />
+          <Button
+            title="Sign In"
+            onPress={() => {
+              login(email.current.text, password.current.text).then(token => {
+                // TODO: Store the received JWT
+              });
+            }}
+          />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

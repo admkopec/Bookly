@@ -19,14 +19,25 @@ const SelectionView = () => {
   const [signInSelected, setSignInSelected] = useState(false);
   const [signUpSelected, setSignUpSelected] = useState(false);
 
+  const containerStyle = {
+    flex: 1,
+    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView style={containerStyle}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        barStyle={
+          isDarkMode || signInSelected || signUpSelected
+            ? 'light-content'
+            : 'dark-content'
+        }
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <View style={backgroundStyle}>
