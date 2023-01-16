@@ -42,10 +42,10 @@ const SignUpView = () => {
         style={containerStyle}>
         <View style={backgroundStyle}>
           <Text>Bookly</Text>
-          <TextInput placeholder="Name" />
-          <TextInput placeholder="Email" />
-          <TextInput placeholder="Password" />
-          <TextInput placeholder="Repeat Password" />
+          <TextInput ref={name} placeholder="Name" />
+          <TextInput ref={email} placeholder="Email" />
+          <TextInput ref={password} placeholder="Password" />
+          <TextInput ref={repeatPassword} placeholder="Repeat Password" />
           <Button
             title="Sign Up"
             onPress={() => {
