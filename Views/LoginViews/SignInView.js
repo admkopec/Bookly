@@ -16,9 +16,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {Node} from 'react';
 import {login} from '../../Logic/AccountLogic';
 
-const SignInView = () => {
+const SignInView = ({route, _}) => {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const onSubmit = route.params;
   const containerStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.white,
@@ -45,8 +45,9 @@ const SignInView = () => {
           <Button
             title="Sign In"
             onPress={() => {
-              login(email.current.text, password.current.text).then(token => {
-                // TODO: Store the received JWT
+              login(email.current.text, password.current.text).then(() => {
+                // Dismiss the view
+                onSubmit();
               });
             }}
           />
@@ -57,7 +58,7 @@ const SignInView = () => {
 };
 
 const Stack = createNativeStackNavigator();
-const SignInNavigationView: () => Node = ({onDismiss}) => {
+const SignInNavigationView: () => Node = ({onDismiss, onSubmit}) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -68,6 +69,7 @@ const SignInNavigationView: () => Node = ({onDismiss}) => {
           ),
         }}
         component={SignInView}
+        initialParams={onSubmit}
       />
     </Stack.Navigator>
   );

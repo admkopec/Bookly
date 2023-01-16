@@ -1,4 +1,9 @@
 import Config from '../Configs/Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const getToken = () => {
+  return AsyncStorage.getItem('@booklyToken');
+};
 
 export const login = (username, password) => {
   // Make a POST request to /authenticate endpoint
@@ -16,7 +21,8 @@ export const login = (username, password) => {
     }),
   })
     .then(e => e.json())
-    .then(response => response.jwttoken);
+    .then(response => response.jwttoken)
+    .then(token => AsyncStorage.setItem('@booklyToken', token));
 };
 
 export const register = (name, email, password) => {
@@ -35,4 +41,8 @@ export const register = (name, email, password) => {
       password: password,
     }),
   }).then(_ => login(email, password));
+};
+
+export const logout = () => {
+  return AsyncStorage.removeItem('@booklyToken');
 };

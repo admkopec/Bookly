@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import type {Node} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -14,11 +14,22 @@ import SearchView from './Views/SearchView';
 import BookingsView from './Views/BookingsView';
 import AccountView from './Views/AccountView';
 import SelectionView from './Views/LoginViews/SelectionView';
+import {getToken} from './Logic/AccountLogic';
 
 const Tab = createBottomTabNavigator();
 
 const App: () => Node = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
+
+  const readTokenFromStorage = async () => {
+    const item = await getToken();
+    setIsSignedIn(item != null);
+  };
+
+  useEffect(() => {
+    readTokenFromStorage();
+  }, []);
+
   if (isSignedIn) {
     return (
       <NavigationContainer>
@@ -44,7 +55,7 @@ const App: () => Node = () => {
   } else {
     return (
       <NavigationContainer>
-        <SelectionView />
+        <SelectionView onSubmit={() => readTokenFromStorage()} />
       </NavigationContainer>
     );
   }
