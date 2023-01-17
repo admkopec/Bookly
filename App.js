@@ -14,7 +14,7 @@ import SearchView from './Views/SearchView';
 import BookingsView from './Views/BookingsView';
 import AccountView from './Views/AccountView';
 import SelectionView from './Views/LoginViews/SelectionView';
-import {getToken} from './Logic/AccountLogic';
+import {AccountContext, getToken} from './Logic/AccountLogic';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,35 +30,36 @@ const App: () => Node = () => {
     readTokenFromStorage();
   }, []);
 
-  if (isSignedIn) {
-    return (
+  return (
+    <AccountContext.Provider value={{isSignedIn, readTokenFromStorage}}>
       <NavigationContainer>
-        <Tab.Navigator screenOptions={{headerShown: false}}>
-          <Tab.Screen
-            name="Search"
-            options={{headerLargeTitle: true}}
-            component={SearchView}
-          />
-          <Tab.Screen
-            name="Bookings"
-            options={{headerLargeTitle: true}}
-            component={BookingsView}
-          />
-          <Tab.Screen
-            name="Account"
-            options={{headerLargeTitle: true}}
-            component={AccountView}
-          />
-        </Tab.Navigator>
+        {isSignedIn ? (
+          <Tab.Navigator screenOptions={{headerShown: false}}>
+            <Tab.Screen
+              name="Search"
+              options={{
+                headerLargeTitle: true,
+                tabBarIcon: ({focused, color, size}) => {},
+              }}
+              component={SearchView}
+            />
+            <Tab.Screen
+              name="Bookings"
+              options={{headerLargeTitle: true}}
+              component={BookingsView}
+            />
+            <Tab.Screen
+              name="Account"
+              options={{headerLargeTitle: true}}
+              component={AccountView}
+            />
+          </Tab.Navigator>
+        ) : (
+          <SelectionView />
+        )}
       </NavigationContainer>
-    );
-  } else {
-    return (
-      <NavigationContainer>
-        <SelectionView onSubmit={() => readTokenFromStorage()} />
-      </NavigationContainer>
-    );
-  }
+    </AccountContext.Provider>
+  );
 };
 
 export default App;

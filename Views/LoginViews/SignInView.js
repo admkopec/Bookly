@@ -1,4 +1,4 @@
-import React, {createRef} from 'react';
+import React, {createRef, useContext} from 'react';
 import {
   Button,
   KeyboardAvoidingView,
@@ -14,11 +14,12 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {Node} from 'react';
-import {login} from '../../Logic/AccountLogic';
+import {AccountContext, login} from '../../Logic/AccountLogic';
 
 const SignInView = ({route, _}) => {
   const isDarkMode = useColorScheme() === 'dark';
-  const onSubmit = route.params;
+  const {isSignedIn, update} = useContext(AccountContext);
+  const dismiss = route.params;
   const containerStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.white,
@@ -47,7 +48,8 @@ const SignInView = ({route, _}) => {
             onPress={() => {
               login(email.current.text, password.current.text).then(() => {
                 // Dismiss the view
-                onSubmit();
+                update();
+                dismiss();
               });
             }}
           />
@@ -58,7 +60,7 @@ const SignInView = ({route, _}) => {
 };
 
 const Stack = createNativeStackNavigator();
-const SignInNavigationView: () => Node = ({onDismiss, onSubmit}) => {
+const SignInNavigationView: () => Node = ({onDismiss}) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -69,7 +71,7 @@ const SignInNavigationView: () => Node = ({onDismiss, onSubmit}) => {
           ),
         }}
         component={SignInView}
-        initialParams={onSubmit}
+        initialParams={onDismiss}
       />
     </Stack.Navigator>
   );

@@ -14,7 +14,7 @@ import {useState} from 'react';
 import SignUpView from './SignUpView';
 import SignInView from './SignInView';
 
-const SelectionView = ({onSubmit}) => {
+const SelectionView = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [signInSelected, setSignInSelected] = useState(false);
   const [signUpSelected, setSignUpSelected] = useState(false);
@@ -64,10 +64,6 @@ const SelectionView = ({onSubmit}) => {
               }}>
               <SignInView
                 onDismiss={() => setSignInSelected(false)}
-                onSubmit={() => {
-                  setSignUpSelected(false);
-                  onSubmit();
-                }}
               />
             </TouchableWithoutFeedback>
           </View>
@@ -87,10 +83,6 @@ const SelectionView = ({onSubmit}) => {
               }}>
               <SignUpView
                 onDismiss={() => setSignUpSelected(false)}
-                onSubmit={() => {
-                  setSignUpSelected(false);
-                  onSubmit();
-                }}
               />
             </TouchableWithoutFeedback>
           </View>

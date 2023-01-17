@@ -1,5 +1,11 @@
+import React from 'react';
 import Config from '../Configs/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const AccountContext = React.createContext({
+  isSignedIn: null,
+  update: () => {},
+});
 
 export const getToken = () => {
   return AsyncStorage.getItem('@booklyToken');

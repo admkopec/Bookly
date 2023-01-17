@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -17,6 +17,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {AccountContext} from '../Logic/AccountLogic';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -48,6 +49,7 @@ const Section = ({children, title}): Node => {
 
 const AccountView = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const {isSignedIn, update} = useContext(AccountContext);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
