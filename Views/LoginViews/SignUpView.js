@@ -1,4 +1,4 @@
-import React, {createRef, useContext} from 'react';
+import React, {createRef, useContext, useState} from 'react';
 import {
   Button,
   KeyboardAvoidingView,
@@ -33,10 +33,10 @@ const SignUpView = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.white,
   };
 
-  const name = createRef();
-  const email = createRef();
-  const password = createRef();
-  const repeatPassword = createRef();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
 
   return (
     <SafeAreaView style={containerStyle}>
@@ -45,17 +45,17 @@ const SignUpView = () => {
         style={containerStyle}>
         <View style={backgroundStyle}>
           <Text>Bookly</Text>
-          <TextInput ref={name} placeholder="Name" />
-          <TextInput ref={email} placeholder="Email" />
-          <TextInput ref={password} placeholder="Password" />
-          <TextInput ref={repeatPassword} placeholder="Repeat Password" />
+          <TextInput placeholder="Name" onChangeText={newText => setName(newText)} />
+          <TextInput placeholder="Email" onChangeText={newText => setEmail(newText)} />
+          <TextInput placeholder="Password" onChangeText={newText => setPassword(newText)} />
+          <TextInput placeholder="Repeat Password" onChangeText={newText => setRepeatPassword(newText)} />
           <TouchableOpacity
             onPress={() => {
-              if (password.current.text === repeatPassword.current.text) {
+              if (password === repeatPassword) {
                 register(
-                  name.current.text,
-                  email.current.text,
-                  password.current.text,
+                  name,
+                  email,
+                  password,
                 )
                   .then(() => {
                     // Dismiss the view

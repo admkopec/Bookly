@@ -21,18 +21,18 @@ const Tab = createBottomTabNavigator();
 const App: () => Node = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
-  const readTokenFromStorage = async () => {
+  const update = async () => {
     const item = await getToken();
     setIsSignedIn(item != null);
   };
 
   useEffect(() => {
-    readTokenFromStorage();
+    update();
   }, []);
 
   return (
-    <AccountContext.Provider value={{isSignedIn, readTokenFromStorage}}>
-      <NavigationContainer>
+    <NavigationContainer>
+      <AccountContext.Provider value={{isSignedIn, update}}>
         {isSignedIn ? (
           <Tab.Navigator screenOptions={{headerShown: false}}>
             <Tab.Screen
@@ -57,8 +57,8 @@ const App: () => Node = () => {
         ) : (
           <SelectionView />
         )}
-      </NavigationContainer>
-    </AccountContext.Provider>
+      </AccountContext.Provider>
+    </NavigationContainer>
   );
 };
 

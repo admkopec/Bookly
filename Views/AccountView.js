@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import type {Node} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -17,7 +18,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AccountContext} from '../Logic/AccountLogic';
+import {AccountContext, logout} from '../Logic/AccountLogic';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -60,6 +61,12 @@ const AccountView = () => {
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
+      />
+      <Button
+        title={'Sign Out'}
+        onPress={() => {
+          logout().then(() => update());
+        }}
       />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"

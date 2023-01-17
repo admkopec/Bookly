@@ -31,8 +31,8 @@ const SignInView = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.white,
   };
 
-  const email = createRef();
-  const password = createRef();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <SafeAreaView style={containerStyle}>
@@ -41,11 +41,17 @@ const SignInView = () => {
         style={containerStyle}>
         <View style={backgroundStyle}>
           <Text>Bookly</Text>
-          <TextInput ref={email} placeholder="Email" />
-          <TextInput ref={password} placeholder="Password" />
+          <TextInput
+            placeholder="Email"
+            onChangeText={newText => setEmail(newText)}
+          />
+          <TextInput
+            placeholder="Password"
+            onChangeText={newText => setPassword(newText)}
+          />
           <TouchableOpacity
             onPress={() => {
-              login(email.current.text, password.current.text)
+              login(email, password)
                 .then(() => {
                   // Dismiss the view
                   update();

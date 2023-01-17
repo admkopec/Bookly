@@ -26,8 +26,16 @@ export const login = (username, password) => {
       password: password,
     }),
   })
+    .then(e => {
+      if (e.status !== 200) {
+        throw Error('Server Error');
+      }
+      return e;
+    })
     .then(e => e.json())
-    .then(response => response.jwttoken)
+    .then(response => {
+      return response.jwttoken;
+    })
     .then(token => AsyncStorage.setItem('@booklyToken', token));
 };
 
@@ -46,9 +54,29 @@ export const register = (name, email, password) => {
       email: email,
       password: password,
     }),
-  }).then(_ => login(email, password));
+  })
+    .then(e => {
+      if (e.status !== 200) {
+        throw Error('Server Error');
+      }
+      return e;
+    })
+    .then(_ => login(email, password));
 };
 
 export const logout = () => {
   return AsyncStorage.removeItem('@booklyToken');
+};
+
+export const fetchUser = async () => {
+  // Make a GET request to /logic/api/users endpoint
+  return await fetch(Config.booklyUrl + '/logic/api/users', {
+    method: 'GET',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      Authorization: 'Bearer ' + (await getToken()),
+    },
+  }).then(e => e.json());
 };
