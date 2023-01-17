@@ -15,11 +15,13 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {Node} from 'react';
 import {AccountContext, register} from '../../Logic/AccountLogic';
+import {PresentationContext} from './SelectionView';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
-const SignUpView = ({route, _}) => {
+const SignUpView = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const {isSignedIn, update} = useContext(AccountContext);
-  const dismiss = route.params;
+  const {dismiss} = useContext(PresentationContext);
   const containerStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.white,
@@ -47,22 +49,27 @@ const SignUpView = ({route, _}) => {
           <TextInput ref={email} placeholder="Email" />
           <TextInput ref={password} placeholder="Password" />
           <TextInput ref={repeatPassword} placeholder="Repeat Password" />
-          <Button
-            title="Sign Up"
+          <TouchableOpacity
             onPress={() => {
               if (password.current.text === repeatPassword.current.text) {
                 register(
                   name.current.text,
                   email.current.text,
                   password.current.text,
-                ).then(() => {
-                  // Dismiss the view
-                  update();
-                  dismiss();
-                });
+                )
+                  .then(() => {
+                    // Dismiss the view
+                    update();
+                    dismiss();
+                  })
+                  .catch(error => {
+                    // TODO: Handle errors
+                    console.error(error);
+                  });
               }
-            }}
-          />
+            }}>
+            <Text>Sign Up</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -70,18 +77,18 @@ const SignUpView = ({route, _}) => {
 };
 
 const Stack = createNativeStackNavigator();
-const SignUpNavigationView: () => Node = ({onDismiss}) => {
+const SignUpNavigationView: () => Node = () => {
+  const {dismiss} = useContext(PresentationContext);
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Sign Up"
         options={{
           headerRight: () => (
-            <Button title="Cancel" onPress={() => onDismiss()} />
+            <Button title="Cancel" onPress={() => dismiss()} />
           ),
         }}
         component={SignUpView}
-        initialParams={onDismiss}
       />
     </Stack.Navigator>
   );

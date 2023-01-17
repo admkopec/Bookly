@@ -1,25 +1,25 @@
-import React, {createRef, useContext} from 'react';
+import React, {createRef, useContext, useState} from 'react';
 import {
   Button,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   Text,
   TextInput,
   useColorScheme,
   View,
 } from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {Node} from 'react';
 import {AccountContext, login} from '../../Logic/AccountLogic';
+import {PresentationContext} from "./SelectionView";
 
-const SignInView = ({route, _}) => {
+const SignInView = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const {isSignedIn, update} = useContext(AccountContext);
-  const dismiss = route.params;
+  const {dismiss} = useContext(PresentationContext);
   const containerStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.white,
@@ -43,16 +43,21 @@ const SignInView = ({route, _}) => {
           <Text>Bookly</Text>
           <TextInput ref={email} placeholder="Email" />
           <TextInput ref={password} placeholder="Password" />
-          <Button
-            title="Sign In"
+          <TouchableOpacity
             onPress={() => {
-              login(email.current.text, password.current.text).then(() => {
-                // Dismiss the view
-                update();
-                dismiss();
-              });
-            }}
-          />
+              login(email.current.text, password.current.text)
+                .then(() => {
+                  // Dismiss the view
+                  update();
+                  dismiss();
+                })
+                .catch(error => {
+                  // TODO: Handle errors
+                  console.error(error);
+                });
+            }}>
+            <Text>Sign In</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -60,18 +65,18 @@ const SignInView = ({route, _}) => {
 };
 
 const Stack = createNativeStackNavigator();
-const SignInNavigationView: () => Node = ({onDismiss}) => {
+const SignInNavigationView: () => Node = () => {
+  const {dismiss} = useContext(PresentationContext);
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Sign In"
         options={{
           headerRight: () => (
-            <Button title="Cancel" onPress={() => onDismiss()} />
+            <Button title="Cancel" onPress={() => dismiss()} />
           ),
         }}
         component={SignInView}
-        initialParams={onDismiss}
       />
     </Stack.Navigator>
   );

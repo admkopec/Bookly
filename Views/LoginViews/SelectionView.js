@@ -62,10 +62,16 @@ const SelectionView = () => {
                   setSignInSelected(false);
                 }
               }}>
-              <SignInView
-                onDismiss={() => setSignInSelected(false)}
-              />
+              <></>
             </TouchableWithoutFeedback>
+            <PresentationContext.Provider
+              value={{
+                dismiss: () => {
+                  setSignInSelected(false);
+                },
+              }}>
+              <SignInView />
+            </PresentationContext.Provider>
           </View>
         </Modal>
         <Modal
@@ -81,15 +87,25 @@ const SelectionView = () => {
                   setSignUpSelected(false);
                 }
               }}>
-              <SignUpView
-                onDismiss={() => setSignUpSelected(false)}
-              />
+              <></>
             </TouchableWithoutFeedback>
+            <PresentationContext.Provider
+              value={{
+                dismiss: () => {
+                  setSignUpSelected(false);
+                },
+              }}>
+              <SignUpView />
+            </PresentationContext.Provider>
           </View>
         </Modal>
       </View>
     </SafeAreaView>
   );
 };
+
+export const PresentationContext = React.createContext({
+  dismiss: () => {},
+});
 
 export default SelectionView;
