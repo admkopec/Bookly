@@ -22,7 +22,6 @@ const SignInView = () => {
   const {dismiss} = useContext(PresentationContext);
   const containerStyle = {
     flex: 1,
-    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   };
@@ -35,7 +34,7 @@ const SignInView = () => {
   const [password, setPassword] = useState('');
 
   return (
-    <SafeAreaView style={containerStyle}>
+    <SafeAreaView style={[backgroundStyle, containerStyle]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={containerStyle}>

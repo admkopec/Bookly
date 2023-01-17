@@ -1,119 +1,117 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import type {Node} from 'react';
 import {
+  ActionSheetIOS,
+  ActivityIndicator,
   Button,
+  Platform,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AccountContext, logout} from '../Logic/AccountLogic';
+import {AccountContext, fetchUser, logout} from '../Logic/AccountLogic';
 
-/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
- * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+const UserCell = () => {
+  const [user, setUser] = useState();
+  useEffect(() => {
+    fetchUser()
+      .then(u => setUser(u))
+      .catch(error => console.error(error));
+  }, []);
+  return user ? (
+    <View>
+      <Text>{user.name}</Text>
     </View>
+  ) : (
+    <ActivityIndicator />
   );
 };
 
-const AccountView = () => {
+const SettingCell = ({title, onPress}) => {
+  // TODO: Add icons and proper styling
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text>{title}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const AccountView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const {isSignedIn, update} = useContext(AccountContext);
 
+  const signOutClicked = () => {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          title: 'Are you sure?',
+          message: 'Signing out will remove all your data from this device.',
+          options: ['Cancel', 'Sign Out'],
+          destructiveButtonIndex: 1,
+          cancelButtonIndex: 0,
+          userInterfaceStyle: isDarkMode ? 'dark' : 'light',
+        },
+        buttonIndex => {
+          if (buttonIndex === 0) {
+            // Cancel clicked
+            // ...
+          } else if (buttonIndex === 1) {
+            // Sign Out clicked
+            logout().then(() => update());
+          }
+        },
+      );
+    } else {
+      logout().then(() => update());
+    }
+  };
+
+  const containerStyle = {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? Colors.black : Colors.white,
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView style={[backgroundStyle, containerStyle]}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Button
-        title={'Sign Out'}
+      <UserCell />
+      <Text>Settings</Text>
+      <SettingCell
+        title={'Name & Email'}
         onPress={() => {
-          logout().then(() => update());
+          navigation.navigate('NameEmail');
         }}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+      <SettingCell
+        title={'Password & Security'}
+        onPress={() => {
+          navigation.navigate('PasswordSecurity');
+        }}
+      />
+      <SettingCell
+        title={'Membership'}
+        onPress={() => {
+          navigation.navigate('Membership');
+        }}
+      />
+      <Button title={'Sign Out'} onPress={signOutClicked} />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 const Stack = createNativeStackNavigator();
 const AccountNavigationView: () => Node = () => {
@@ -121,10 +119,23 @@ const AccountNavigationView: () => Node = () => {
     <Stack.Navigator>
       <Stack.Screen
         name="Account"
-        options={{
-          headerLargeTitle: true,
-        }}
+        options={{headerLargeTitle: true}}
         component={AccountView}
+      />
+      <Stack.Screen
+        name="NameEmail"
+        options={{headerTitle: 'Name & Email'}}
+        component={View}
+      />
+      <Stack.Screen
+        name="PasswordSecurity"
+        options={{headerTitle: 'Password & Security'}}
+        component={View}
+      />
+      <Stack.Screen
+        name="Membership"
+        options={{headerTitle: 'Membership'}}
+        component={View}
       />
     </Stack.Navigator>
   );

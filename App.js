@@ -15,10 +15,13 @@ import BookingsView from './Views/BookingsView';
 import AccountView from './Views/AccountView';
 import SelectionView from './Views/LoginViews/SelectionView';
 import {AccountContext, getToken} from './Logic/AccountLogic';
+import {useColorScheme} from 'react-native';
+import {DefaultTheme, DarkTheme} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 const App: () => Node = () => {
+  const isDarkMode = useColorScheme() === 'dark';
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   const update = async () => {
@@ -31,7 +34,7 @@ const App: () => Node = () => {
   }, []);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
       <AccountContext.Provider value={{isSignedIn, update}}>
         {isSignedIn ? (
           <Tab.Navigator screenOptions={{headerShown: false}}>
@@ -45,12 +48,18 @@ const App: () => Node = () => {
             />
             <Tab.Screen
               name="Bookings"
-              options={{headerLargeTitle: true}}
+              options={{
+                headerLargeTitle: true,
+                tabBarIcon: ({focused, color, size}) => {},
+              }}
               component={BookingsView}
             />
             <Tab.Screen
               name="Account"
-              options={{headerLargeTitle: true}}
+              options={{
+                headerLargeTitle: true,
+                tabBarIcon: ({focused, color, size}) => {},
+              }}
               component={AccountView}
             />
           </Tab.Navigator>
