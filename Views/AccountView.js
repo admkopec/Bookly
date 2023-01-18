@@ -16,6 +16,7 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AccountContext, fetchUser, logout} from '../Logic/AccountLogic';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const UserCell = () => {
   const [user, setUser] = useState();
@@ -24,6 +25,7 @@ const UserCell = () => {
       .then(u => setUser(u))
       .catch(error => console.error(error));
   }, []);
+  // TODO: Add proper styling
   return user ? (
     <View>
       <Text>{user.name}</Text>
@@ -33,10 +35,11 @@ const UserCell = () => {
   );
 };
 
-const SettingCell = ({title, onPress}) => {
-  // TODO: Add icons and proper styling
+const SettingCell = ({title, icon, onPress}) => {
+  // TODO: Add proper styling
   return (
     <TouchableOpacity onPress={onPress}>
+      <Icon name={icon} size={20} />
       <Text>{title}</Text>
     </TouchableOpacity>
   );
@@ -92,18 +95,21 @@ const AccountView = ({route, navigation}) => {
       <Text>Settings</Text>
       <SettingCell
         title={'Name & Email'}
+        icon={'person'}
         onPress={() => {
           navigation.navigate('NameEmail');
         }}
       />
       <SettingCell
         title={'Password & Security'}
+        icon={'lock-closed'}
         onPress={() => {
           navigation.navigate('PasswordSecurity');
         }}
       />
       <SettingCell
         title={'Membership'}
+        icon={'star'}
         onPress={() => {
           navigation.navigate('Membership');
         }}

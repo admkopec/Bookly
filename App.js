@@ -17,6 +17,7 @@ import SelectionView from './Views/LoginViews/SelectionView';
 import {AccountContext, getToken} from './Logic/AccountLogic';
 import {useColorScheme} from 'react-native';
 import {DefaultTheme, DarkTheme} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +43,7 @@ const App: () => Node = () => {
               name="Search"
               options={{
                 headerLargeTitle: true,
-                tabBarIcon: ({focused, color, size}) => {},
+                tabBarIcon: ({focused, color, size}) => <Icon name="search" size={size} color={color} />,
               }}
               component={SearchView}
             />
@@ -50,7 +51,7 @@ const App: () => Node = () => {
               name="Bookings"
               options={{
                 headerLargeTitle: true,
-                tabBarIcon: ({focused, color, size}) => {},
+                tabBarIcon: ({focused, color, size}) => <Icon name="book" size={size} color={color} />,
               }}
               component={BookingsView}
             />
@@ -58,7 +59,7 @@ const App: () => Node = () => {
               name="Account"
               options={{
                 headerLargeTitle: true,
-                tabBarIcon: ({focused, color, size}) => {},
+                tabBarIcon: ({focused, color, size}) => <Icon name="person-circle" size={size} color={color} />,
               }}
               component={AccountView}
             />
