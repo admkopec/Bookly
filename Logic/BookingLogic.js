@@ -2,6 +2,7 @@ import Config from '../Configs/Config';
 import {getToken} from './AccountLogic';
 
 export const fetchBookings = async () => {
+  // TODO: Implement paging
   // Make a GET request to /logic/api/bookings endpoint
   return await fetch(Config.booklyUrl + '/logic/api/bookings', {
     method: 'GET',
@@ -16,7 +17,7 @@ export const fetchBookings = async () => {
 
 export const fetchBooking = async bookingId => {
   // Make a GET request to /logic/api/bookings/{bookingId} endpoint
-  return await fetch(Config.booklyUrl + '/logic/api/bookings' + bookingId, {
+  return await fetch(Config.booklyUrl + '/logic/api/bookings/' + bookingId, {
     method: 'GET',
     mode: 'cors',
     cache: 'no-cache',
@@ -29,7 +30,7 @@ export const fetchBooking = async bookingId => {
 
 export const cancelBooking = async bookingId => {
   // Make a DELETE request to /logic/api/bookings/{bookingId} endpoint
-  return await fetch(Config.booklyUrl + '/logic/api/bookings' + bookingId, {
+  return await fetch(Config.booklyUrl + '/logic/api/bookings/' + bookingId, {
     method: 'DELETE',
     mode: 'cors',
     cache: 'no-cache',
@@ -43,7 +44,7 @@ export const cancelBooking = async bookingId => {
 export const createBooking = async booking => {
   // Make a PUT/POST request to /logic/api/bookings/{bookingId} endpoint
   return await fetch(Config.booklyUrl + '/logic/api/bookings', {
-    method: 'PUT', // 'POST',
+    method: 'POST',
     mode: 'cors',
     cache: 'no-cache',
     credentials: 'same-origin',
