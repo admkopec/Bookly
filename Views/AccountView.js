@@ -15,16 +15,17 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AccountContext, fetchUser, logout} from '../Logic/AccountLogic';
+import {
+  AccountContext,
+  fetchUser,
+  logout,
+  UserContext,
+} from '../Logic/AccountLogic';
 import Icon from 'react-native-vector-icons/Ionicons';
+import NameEmailView from './NameEmailView';
 
 const UserCell = () => {
-  const [user, setUser] = useState();
-  useEffect(() => {
-    fetchUser()
-      .then(u => setUser(u))
-      .catch(error => console.error(error));
-  }, []);
+  const {user, update} = useContext(UserContext);
   // TODO: Add proper styling
   return user ? (
     <View>
@@ -121,29 +122,39 @@ const AccountView = ({route, navigation}) => {
 
 const Stack = createNativeStackNavigator();
 const AccountNavigationView: () => Node = () => {
+  const [user, setUser] = useState();
+  const update = user => {
+    setUser(user);
+    fetchUser().then(e => setUser(e)).catch(error => console.error(error));
+  };
+  useEffect(() => {
+    update();
+  }, []);
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Account"
-        options={{headerLargeTitle: true}}
-        component={AccountView}
-      />
-      <Stack.Screen
-        name="NameEmail"
-        options={{headerTitle: 'Name & Email'}}
-        component={View}
-      />
-      <Stack.Screen
-        name="PasswordSecurity"
-        options={{headerTitle: 'Password & Security'}}
-        component={View}
-      />
-      <Stack.Screen
-        name="Membership"
-        options={{headerTitle: 'Membership'}}
-        component={View}
-      />
-    </Stack.Navigator>
+    <UserContext.Provider value={{user, update}}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Account"
+          options={{headerLargeTitle: true}}
+          component={AccountView}
+        />
+        <Stack.Screen
+          name="NameEmail"
+          options={{headerTitle: 'Name & Email'}}
+          component={NameEmailView}
+        />
+        <Stack.Screen
+          name="PasswordSecurity"
+          options={{headerTitle: 'Password & Security'}}
+          component={View}
+        />
+        <Stack.Screen
+          name="Membership"
+          options={{headerTitle: 'Membership'}}
+          component={View}
+        />
+      </Stack.Navigator>
+    </UserContext.Provider>
   );
 };
 

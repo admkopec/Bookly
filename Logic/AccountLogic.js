@@ -7,6 +7,11 @@ export const AccountContext = React.createContext({
   update: () => {},
 });
 
+export const UserContext = React.createContext({
+  user: null,
+  update: () => {},
+});
+
 export const getToken = () => {
   return AsyncStorage.getItem('@booklyToken');
 };
@@ -78,5 +83,36 @@ export const fetchUser = async () => {
     headers: {
       Authorization: 'Bearer ' + (await getToken()),
     },
+  }).then(e => {
+    if (e.status !== 200) {
+      logout();
+      throw Error();
+    } else {
+      return e.json();
+    }
+  });
+};
+
+export const updateUser = async (
+  name: string,
+  email: string,
+  password: string,
+) => {
+  const user = await fetchUser();
+  // Make a PUT request to /logic/api/users/{userId} endpoint
+  return await fetch(Config.booklyUrl + '/logic/api/users/' + user.id, {
+    method: 'PUT',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      Authorization: 'Bearer ' + (await getToken()),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: name ?? user.name,
+      email: email ?? user.email,
+      password: password,
+    }),
   }).then(e => e.json());
 };
