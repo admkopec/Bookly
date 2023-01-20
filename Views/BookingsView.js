@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import type {Node} from 'react';
 import {
-    ActivityIndicator,
-    SafeAreaView,
-    ScrollView,
-    SectionList,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View,
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  SectionList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -21,9 +21,7 @@ const BookingsView = () => {
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [endReached, setEndReached] = useState(endReached);
-  const [sections, setSections] = useState([
-    {title: 'Upcoming', data: ['No upcoming Bookings!']},
-  ]);
+  const [sections, setSections] = useState([]);
 
   const containerStyle = {
     flex: 1,
@@ -57,9 +55,9 @@ const BookingsView = () => {
         setIsRefreshing(false);
       })
       .catch(error => {
-          setIsMoreLoading(false);
-          setIsRefreshing(false);
-          console.error(error);
+        setIsMoreLoading(false);
+        setIsRefreshing(false);
+        console.error(error);
       });
   };
 
@@ -67,10 +65,10 @@ const BookingsView = () => {
     update();
   }, [page]);
 
-  const renderFooter = (title) => {
-      if (isMoreLoading && title === sections[sections.length - 1].title) {
-          return <ActivityIndicator/>;
-      }
+  const renderFooter = title => {
+    if (isMoreLoading && title === sections[sections.length - 1].title) {
+      return <ActivityIndicator />;
+    }
   };
 
   return (
@@ -90,14 +88,14 @@ const BookingsView = () => {
         ListEmptyComponent={<Text>You haven't made any Bookings yet!</Text>}
         onEndReachedThreshold={0.2}
         onEndReached={() => {
-            if (!endReached) {
-                setIsMoreLoading(true);
-                setPage(page + 1);
-            }
+          if (!endReached) {
+            setIsMoreLoading(true);
+            setPage(page + 1);
+          }
         }}
         onRefresh={() => {
-            setIsRefreshing(true);
-            update();
+          setIsRefreshing(true);
+          update();
         }}
       />
     </SafeAreaView>
