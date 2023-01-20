@@ -1,10 +1,10 @@
 import Config from '../Configs/Config';
 import {getToken} from './AccountLogic';
 
-export const fetchBookings = async () => {
-  // TODO: Implement paging
+export const fetchBookings = async (page: number) => {
+  // TODO: Implement additional paging parameters
   // Make a GET request to /logic/api/bookings endpoint
-  return await fetch(Config.booklyUrl + '/logic/api/bookings', {
+  return await fetch(Config.booklyUrl + '/logic/api/bookings?page=' + page, {
     method: 'GET',
     mode: 'cors',
     cache: 'no-cache',

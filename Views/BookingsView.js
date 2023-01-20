@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import type {Node} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  SectionList,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+    ActivityIndicator,
+    SafeAreaView,
+    ScrollView,
+    SectionList,
+    StatusBar,
+    StyleSheet,
+    Text,
+    useColorScheme,
+    View,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -16,6 +17,10 @@ import {fetchBookings} from '../Logic/BookingLogic';
 
 const BookingsView = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const [isRefreshing, setIsRefreshing] = useState(true);
+  const [isMoreLoading, setIsMoreLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [endReached, setEndReached] = useState(endReached);
   const [sections, setSections] = useState([
     {title: 'Upcoming', data: ['No upcoming Bookings!']},
   ]);
@@ -29,26 +34,27 @@ const BookingsView = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.black : Colors.white,
   };
-
+// Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
   const update = () => {
-    fetchBookings()
+    fetchBookings(page)
       .then(bookings => {
+        // TODO: Support some additional sorting
         // Split bookings based on `dateFrom`
         const upcoming = bookings.filter(e => e.dateFrom > Date());
         const previous = bookings.filter(e => e.dateFrom < Date());
         let sectionsDraft = [];
         if (upcoming.length > 0) {
           sectionsDraft.push({title: 'Upcoming', data: upcoming});
-        } else {
-          sectionsDraft.push({
-            title: 'Upcoming',
-            data: ['No upcoming Bookings!'],
-          });
         }
         if (previous.length > 0) {
           sectionsDraft.push({title: 'Previous', data: previous});
         }
+        if (bookings.length === 0) {
+          setEndReached(true);
+        }
         setSections(sectionsDraft);
+        setIsMoreLoading(false);
+        setIsRefreshing(false);
       })
       .catch(error => {
         console.error(error);
@@ -57,7 +63,13 @@ const BookingsView = () => {
 
   useEffect(() => {
     update();
-  }, []);
+  }, [page]);
+
+  const renderFooter = (title) => {
+      if (isMoreLoading && title === sections[sections.length - 1].title) {
+          return <ActivityIndicator/>;
+      }
+  };
 
   return (
     <SafeAreaView style={[backgroundStyle, containerStyle]}>
@@ -68,9 +80,23 @@ const BookingsView = () => {
       <SectionList
         style={backgroundStyle}
         sections={sections}
+        refreshing={isRefreshing}
         keyExtractor={(item, index) => index}
         renderItem={({item}) => <Text>{item}</Text>}
         renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+        renderSectionFooter={({section: {title}}) => renderFooter(title)}
+        ListEmptyComponent={<Text>You haven't made any Bookings yet!</Text>}
+        onEndReachedThreshold={0.2}
+        onEndReached={() => {
+            if (!endReached) {
+                setIsMoreLoading(true);
+                setPage(page + 1);
+            }
+        }}
+        onRefresh={() => {
+            setIsRefreshing(true);
+            update();
+        }}
       />
     </SafeAreaView>
   );
