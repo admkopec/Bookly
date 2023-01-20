@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import type {Node} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -15,7 +15,7 @@ import BookingsView from './Views/BookingsView';
 import AccountView from './Views/AccountView';
 import SelectionView from './Views/LoginViews/SelectionView';
 import {AccountContext, getToken} from './Logic/AccountLogic';
-import {useColorScheme} from 'react-native';
+import {Platform, Settings, useColorScheme} from 'react-native';
 import {DefaultTheme, DarkTheme} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -23,14 +23,21 @@ const Tab = createBottomTabNavigator();
 
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(() => {
+    if (Platform.OS === 'ios') {
+      const optionalToken = Settings.get('booklyToken');
+      return optionalToken !== null && optionalToken !== undefined;
+    } else {
+      return false;
+    }
+  });
 
   const update = async () => {
     const item = await getToken();
     setIsSignedIn(item != null);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     update();
   }, []);
 
@@ -40,25 +47,28 @@ const App: () => Node = () => {
         {isSignedIn ? (
           <Tab.Navigator screenOptions={{headerShown: false}}>
             <Tab.Screen
-              name="Search"
+              name="SearchTab"
               options={{
                 headerLargeTitle: true,
+                tabBarLabel: 'Search',
                 tabBarIcon: ({focused, color, size}) => <Icon name="search" size={size} color={color} />,
               }}
               component={SearchView}
             />
             <Tab.Screen
-              name="Bookings"
+              name="BookingsTab"
               options={{
                 headerLargeTitle: true,
+                tabBarLabel: 'Bookings',
                 tabBarIcon: ({focused, color, size}) => <Icon name="book" size={size} color={color} />,
               }}
               component={BookingsView}
             />
             <Tab.Screen
-              name="Account"
+              name="AccountTab"
               options={{
                 headerLargeTitle: true,
+                tabBarLabel: 'Account',
                 tabBarIcon: ({focused, color, size}) => <Icon name="person-circle" size={size} color={color} />,
               }}
               component={AccountView}

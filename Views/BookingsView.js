@@ -15,13 +15,14 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {fetchBookings} from '../Logic/BookingLogic';
 
-const BookingsView = () => {
+const BookingsView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [endReached, setEndReached] = useState(endReached);
   const [sections, setSections] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
   const containerStyle = {
     flex: 1,
@@ -64,6 +65,14 @@ const BookingsView = () => {
   useEffect(() => {
     update();
   }, [page]);
+
+  useEffect(() => {
+      navigation.setOptions({
+          headerSearchBarOptions: {
+              onChangeText: (e) => setSearchText(e.nativeEvent.text),
+          }
+      });
+  }, [navigation]);
 
   const renderFooter = title => {
     if (isMoreLoading && title === sections[sections.length - 1].title) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import Config from '../Configs/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Platform, Settings} from 'react-native';
 
 type User = {
   id: string,
@@ -47,7 +48,12 @@ export const login = (username: string, password: string) => {
     .then(response => {
       return response.jwttoken;
     })
-    .then(token => AsyncStorage.setItem('@booklyToken', token));
+    .then(token => {
+      if (Platform.OS === 'ios') {
+        Settings.set({booklyToken: token});
+      }
+      return AsyncStorage.setItem('@booklyToken', token);
+    });
 };
 
 export const register = (name: string, email: string, password: string) => {
@@ -76,6 +82,9 @@ export const register = (name: string, email: string, password: string) => {
 };
 
 export const logout = () => {
+  if (Platform.OS === 'ios') {
+    Settings.set({booklyToken: null});
+  }
   return AsyncStorage.removeItem('@booklyToken');
 };
 
