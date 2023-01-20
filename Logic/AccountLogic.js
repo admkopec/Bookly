@@ -2,6 +2,12 @@ import React from 'react';
 import Config from '../Configs/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+type User = {
+  id: string,
+  name: string,
+  email: string,
+};
+
 export const AccountContext = React.createContext({
   isSignedIn: null,
   update: () => {},
@@ -12,7 +18,7 @@ export const UserContext = React.createContext({
   update: () => {},
 });
 
-export const getToken = () => {
+export const getToken = (): Promise<string | null> => {
   return AsyncStorage.getItem('@booklyToken');
 };
 
@@ -73,7 +79,7 @@ export const logout = () => {
   return AsyncStorage.removeItem('@booklyToken');
 };
 
-export const fetchUser = async () => {
+export const fetchUser = async (): Promise<User> => {
   // Make a GET request to /logic/api/users endpoint
   return await fetch(Config.booklyUrl + '/logic/api/users', {
     method: 'GET',
@@ -97,7 +103,7 @@ export const updateUser = async (
   name: string,
   email: string,
   password: string,
-) => {
+): Promise<User> => {
   const user = await fetchUser();
   // Make a PUT request to /logic/api/users/{userId} endpoint
   return await fetch(Config.booklyUrl + '/logic/api/users/' + user.id, {

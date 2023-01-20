@@ -34,7 +34,7 @@ const BookingsView = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.black : Colors.white,
   };
-// Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
+  // Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
   const update = () => {
     fetchBookings(page)
       .then(bookings => {
@@ -57,7 +57,9 @@ const BookingsView = () => {
         setIsRefreshing(false);
       })
       .catch(error => {
-        console.error(error);
+          setIsMoreLoading(false);
+          setIsRefreshing(false);
+          console.error(error);
       });
   };
 

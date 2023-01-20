@@ -1,7 +1,15 @@
 import Config from '../Configs/Config';
 import {getToken} from './AccountLogic';
 
-export const fetchBookings = async (page: number) => {
+type Booking = {
+  id: string,
+  name: string,
+  dateFrom: number,
+  dateTo: number,
+  // ...
+};
+
+export const fetchBookings = async (page: number): Promise<[Booking]> => {
   // TODO: Implement additional paging parameters
   // Make a GET request to /logic/api/bookings endpoint
   return await fetch(Config.booklyUrl + '/logic/api/bookings?page=' + page, {
@@ -12,10 +20,18 @@ export const fetchBookings = async (page: number) => {
     headers: {
       Authorization: 'Bearer ' + (await getToken()),
     },
-  }).then(e => e.json());
+  }).then(e => {
+    if (e.status === 404) {
+      return [];
+    }
+    if (e.status !== 200) {
+      throw Error('Network error');
+    }
+    return e.json();
+  });
 };
 
-export const fetchBooking = async (bookingId: string) => {
+export const fetchBooking = async (bookingId: string): Promise<Booking> => {
   // Make a GET request to /logic/api/bookings/{bookingId} endpoint
   return await fetch(Config.booklyUrl + '/logic/api/bookings/' + bookingId, {
     method: 'GET',
@@ -25,10 +41,15 @@ export const fetchBooking = async (bookingId: string) => {
     headers: {
       Authorization: 'Bearer ' + (await getToken()),
     },
-  }).then(e => e.json());
+  }).then(e => {
+    if (e.status !== 200) {
+      throw Error('Network error');
+    }
+    return e.json();
+  });
 };
 
-export const cancelBooking = async (bookingId: string) => {
+export const cancelBooking = async (bookingId: string): Promise<boolean> => {
   // Make a DELETE request to /logic/api/bookings/{bookingId} endpoint
   return await fetch(Config.booklyUrl + '/logic/api/bookings/' + bookingId, {
     method: 'DELETE',
@@ -41,7 +62,7 @@ export const cancelBooking = async (bookingId: string) => {
   }).then(e => e.status === 200);
 };
 
-export const createBooking = async booking => {
+export const createBooking = async (booking: Booking): Promise<Booking> => {
   // Make a PUT/POST request to /logic/api/bookings/{bookingId} endpoint
   return await fetch(Config.booklyUrl + '/logic/api/bookings', {
     method: 'POST',
@@ -52,5 +73,10 @@ export const createBooking = async booking => {
       Authorization: 'Bearer ' + (await getToken()),
     },
     body: JSON.stringify(booking),
-  }).then(e => e.json());
+  }).then(e => {
+    if (e.status !== 200 || e.status !== 201) {
+      throw Error('Network error');
+    }
+    return e.json();
+  });
 };
