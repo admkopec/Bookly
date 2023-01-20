@@ -15,7 +15,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {Node} from 'react';
 import {AccountContext, register} from '../../Logic/AccountLogic';
-import {PresentationContext} from './SelectionView';
+import PresentationContext from '../../Logic/PresentationContext';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const SignUpView = () => {

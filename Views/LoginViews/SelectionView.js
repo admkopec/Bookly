@@ -13,6 +13,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {useState} from 'react';
 import SignUpView from './SignUpView';
 import SignInView from './SignInView';
+import PresentationContext from '../../Logic/PresentationContext';
 
 const SelectionView = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -103,9 +104,5 @@ const SelectionView = () => {
     </SafeAreaView>
   );
 };
-
-export const PresentationContext = React.createContext({
-  dismiss: () => {},
-});
 
 export default SelectionView;

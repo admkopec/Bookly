@@ -23,6 +23,7 @@ import {
 } from '../Logic/AccountLogic';
 import Icon from 'react-native-vector-icons/Ionicons';
 import NameEmailView from './NameEmailView';
+import PasswordSecurityView from "./PasswordSecurityView";
 
 const UserCell = () => {
   const {user, update} = useContext(UserContext);
@@ -146,7 +147,7 @@ const AccountNavigationView: () => Node = () => {
         <Stack.Screen
           name="PasswordSecurity"
           options={{headerTitle: 'Password & Security'}}
-          component={View}
+          component={PasswordSecurityView}
         />
         <Stack.Screen
           name="Membership"

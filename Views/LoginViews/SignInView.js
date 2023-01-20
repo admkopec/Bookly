@@ -14,7 +14,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {Node} from 'react';
 import {AccountContext, login} from '../../Logic/AccountLogic';
-import {PresentationContext} from "./SelectionView";
+import PresentationContext from '../../Logic/PresentationContext';
 
 const SignInView = () => {
   const isDarkMode = useColorScheme() === 'dark';
