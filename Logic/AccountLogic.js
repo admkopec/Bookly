@@ -16,7 +16,7 @@ export const getToken = () => {
   return AsyncStorage.getItem('@booklyToken');
 };
 
-export const login = (username, password) => {
+export const login = (username: string, password: string) => {
   // Make a POST request to /authenticate endpoint
   return fetch(Config.booklyUrl + '/authenticate', {
     method: 'POST',
@@ -44,7 +44,7 @@ export const login = (username, password) => {
     .then(token => AsyncStorage.setItem('@booklyToken', token));
 };
 
-export const register = (name, email, password) => {
+export const register = (name: string, email: string, password: string) => {
   // Make a POST request to /logic/api/users endpoint to create a new User
   return fetch(Config.booklyUrl + '/logic/api/users', {
     method: 'POST',

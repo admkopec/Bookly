@@ -15,7 +15,7 @@ export const fetchBookings = async () => {
   }).then(e => e.json());
 };
 
-export const fetchBooking = async bookingId => {
+export const fetchBooking = async (bookingId: string) => {
   // Make a GET request to /logic/api/bookings/{bookingId} endpoint
   return await fetch(Config.booklyUrl + '/logic/api/bookings/' + bookingId, {
     method: 'GET',
@@ -28,7 +28,7 @@ export const fetchBooking = async bookingId => {
   }).then(e => e.json());
 };
 
-export const cancelBooking = async bookingId => {
+export const cancelBooking = async (bookingId: string) => {
   // Make a DELETE request to /logic/api/bookings/{bookingId} endpoint
   return await fetch(Config.booklyUrl + '/logic/api/bookings/' + bookingId, {
     method: 'DELETE',

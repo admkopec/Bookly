@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import type {Node} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -17,6 +18,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import DatePicker from 'react-native-date-picker';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -48,6 +50,8 @@ const Section = ({children, title}): Node => {
 
 const SearchView = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -63,6 +67,19 @@ const SearchView = () => {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
+        <Button title="Open" onPress={() => setOpen(true)} />
+        <DatePicker
+          modal
+          open={open}
+          date={date}
+          onConfirm={date => {
+            setOpen(false);
+            setDate(date);
+          }}
+          onCancel={() => {
+            setOpen(false);
+          }}
+        />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,

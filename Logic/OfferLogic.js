@@ -1,7 +1,7 @@
 import Config from '../Configs/Config';
 import {getToken} from './AccountLogic';
 
-export const fetchOffer = async (offerId, service) => {
+export const fetchOffer = async (offerId: string, service: string) => {
   // Make a GET request to /logic/api/offers/{offerId} endpoint
   return await fetch(
     Config.booklyUrl + '/logic/api/offers/' + service + '/' + offerId,
@@ -17,14 +17,14 @@ export const fetchOffer = async (offerId, service) => {
   ).then(e => e.json());
 };
 
-export const fetchParklyOffers = async (location, dateFrom, dateTo, numberOfSpaces) => {
+export const fetchParklyOffers = async (location: string, dateFrom: Date, dateTo: Date, numberOfSpaces: number) => {
   // TODO: Implement search criteria and paging
   // Make a GET request to /logic/api/offers/parkly endpoint
   return await fetch(
     Config.booklyUrl +
       '/logic/api/offers/parkly/?location=' + location +
-      '&dateFrom=' + dateFrom +
-      '&dateTo=' + dateTo +
+      '&dateFrom=' + Math.floor(dateFrom.getTime() / 1000) +
+      '&dateTo=' + Math.floor(dateTo.getTime() / 1000) +
       '&numberOfSpaces=' + numberOfSpaces,
     {
       method: 'GET',
@@ -38,14 +38,14 @@ export const fetchParklyOffers = async (location, dateFrom, dateTo, numberOfSpac
   ).then(e => e.json());
 };
 
-export const fetchCarlyOffers = async (location, dateFrom, dateTo, carType) => {
+export const fetchCarlyOffers = async (location: string, dateFrom: Date, dateTo: Date, carType) => {
   // TODO: Implement search criteria and paging
   // Make a GET request to /logic/api/offers/carly endpoint
   return await fetch(
       Config.booklyUrl +
       '/logic/api/offers/carly/?location=' + location +
-      '&dateFrom=' + dateFrom +
-      '&dateTo=' + dateTo +
+      '&dateFrom=' + Math.floor(dateFrom.getTime() / 1000) +
+      '&dateTo=' + Math.floor(dateTo.getTime() / 1000) +
       '&carType=' + carType,
       {
         method: 'GET',
@@ -59,14 +59,14 @@ export const fetchCarlyOffers = async (location, dateFrom, dateTo, carType) => {
   ).then(e => e.json());
 };
 
-export const fetchFlatlyOffers = async (location, dateFrom, dateTo, numberOfAdults, numberOfKids) => {
+export const fetchFlatlyOffers = async (location: string, dateFrom: Date, dateTo: Date, numberOfAdults: number, numberOfKids: number) => {
   // TODO: Implement search criteria and paging
   // Make a GET request to /logic/api/offers/flatly endpoint
   return await fetch(
       Config.booklyUrl +
       '/logic/api/offers/flatly/?location=' + location +
-      '&dateFrom=' + dateFrom +
-      '&dateTo=' + dateTo +
+      '&dateFrom=' + Math.floor(dateFrom.getTime() / 1000) +
+      '&dateTo=' + Math.floor(dateTo.getTime() / 1000) +
       '&numberOfAdults=' + numberOfAdults +
       '&numberOfKids=' + numberOfKids,
       {
