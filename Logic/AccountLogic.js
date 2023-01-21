@@ -3,7 +3,7 @@ import Config from '../Configs/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Platform, Settings} from 'react-native';
 
-type User = {
+export type User = {
   id: string,
   name: string,
   email: string,

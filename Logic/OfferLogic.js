@@ -1,7 +1,7 @@
 import Config from '../Configs/Config';
 import {getToken} from './AccountLogic';
 
-type Offer = {
+export type Offer = {
     id: string,
     // ...
 };

@@ -2,18 +2,43 @@ import React, {useEffect, useState} from 'react';
 import type {Node} from 'react';
 import {
   ActivityIndicator,
+  Modal,
   SafeAreaView,
   ScrollView,
   SectionList,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
   useColorScheme,
   View,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {fetchBookings} from '../Logic/BookingLogic';
+import PresentationContext from '../Logic/PresentationContext';
+import BookingView from './BookingView';
+import type {Booking} from '../Logic/BookingLogic';
+
+const NoItemsItem = () => {
+  return <Text>You haven't made any Bookings yet!</Text>;
+};
+
+const SectionHeader: ({title: string}) => Node = ({title}) => {
+  return <Text>{title}</Text>;
+};
+
+const BookingItem: ({booking: Booking, onPress: () => void}) => Node = ({
+  booking,
+  onPress,
+}) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text>{booking}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const BookingsView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,6 +48,7 @@ const BookingsView = ({route, navigation}) => {
   const [endReached, setEndReached] = useState(endReached);
   const [sections, setSections] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   const containerStyle = {
     flex: 1,
@@ -37,16 +63,27 @@ const BookingsView = ({route, navigation}) => {
   const update = () => {
     fetchBookings(page)
       .then(bookings => {
+        // TODO: Support searching
         // TODO: Support some additional sorting
         // Split bookings based on `dateFrom`
         const upcoming = bookings.filter(e => e.dateFrom > Date());
         const previous = bookings.filter(e => e.dateFrom < Date());
-        let sectionsDraft = [];
+        let sectionsDraft = isRefreshing ? [] : sections;
         if (upcoming.length > 0) {
-          sectionsDraft.push({title: 'Upcoming', data: upcoming});
+          if (sectionsDraft[0].title === 'Upcoming') {
+            sectionsDraft[0].data = [...sectionsDraft[0].data, ...upcoming];
+          } else {
+            sectionsDraft.push({title: 'Upcoming', data: upcoming});
+          }
         }
         if (previous.length > 0) {
-          sectionsDraft.push({title: 'Previous', data: previous});
+          if (sectionsDraft[0].title === 'Previous') {
+            sectionsDraft[0].data = [...sectionsDraft[0].data, ...previous];
+          } else if (sectionsDraft[1].title === 'Previous') {
+            sectionsDraft[0].data = [...sectionsDraft[1].data, ...previous];
+          } else {
+            sectionsDraft.push({title: 'Previous', data: previous});
+          }
         }
         if (bookings.length === 0) {
           setEndReached(true);
@@ -67,12 +104,21 @@ const BookingsView = ({route, navigation}) => {
   }, [page]);
 
   useEffect(() => {
-      navigation.setOptions({
-          headerSearchBarOptions: {
-              onChangeText: (e) => setSearchText(e.nativeEvent.text),
-          }
-      });
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        onChangeText: e => setSearchText(e.nativeEvent.text),
+      },
+    });
   }, [navigation]);
+
+  const removeFromSections = (booking: Booking) => {
+    let sectionsDraft = sections;
+    for (let i = 0; i < sectionsDraft.length; i++) {
+      sectionsDraft[i].data = sectionsDraft[i].data.filter(
+        e => e.id !== booking.id,
+      );
+    }
+  };
 
   const renderFooter = title => {
     if (isMoreLoading && title === sections[sections.length - 1].title) {
@@ -91,10 +137,17 @@ const BookingsView = ({route, navigation}) => {
         sections={sections}
         refreshing={isRefreshing}
         keyExtractor={(item, index) => index}
-        renderItem={({item}) => <Text>{item}</Text>}
-        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+        renderItem={({item}) => (
+          <BookingItem
+            booking={item}
+            onPress={() => setSelectedBooking(item)}
+          />
+        )}
+        renderSectionHeader={({section: {title}}) => (
+          <SectionHeader title={title} />
+        )}
         renderSectionFooter={({section: {title}}) => renderFooter(title)}
-        ListEmptyComponent={<Text>You haven't made any Bookings yet!</Text>}
+        ListEmptyComponent={<NoItemsItem />}
         onEndReachedThreshold={0.2}
         onEndReached={() => {
           if (!endReached) {
@@ -104,9 +157,42 @@ const BookingsView = ({route, navigation}) => {
         }}
         onRefresh={() => {
           setIsRefreshing(true);
+          setPage(1);
           update();
         }}
       />
+      <Modal
+        visible={selectedBooking !== null}
+        animationType="slide"
+        presentationStyle={'pageSheet'}>
+        <View style={{flex: 1}}>
+          <TouchableWithoutFeedback
+            onPressOut={e => {
+              if (e.nativeEvent.locationY > 150) {
+                setSelectedBooking(null);
+              }
+            }}>
+            <></>
+          </TouchableWithoutFeedback>
+          <PresentationContext.Provider
+            value={{
+              dismiss: () => {
+                setSelectedBooking(null);
+              },
+            }}>
+            <BookingContext.Provider
+              value={{
+                booking: selectedBooking,
+                removed: () => {
+                  removeFromSections(selectedBooking);
+                  setSelectedBooking(null);
+                },
+              }}>
+              <BookingView />
+            </BookingContext.Provider>
+          </PresentationContext.Provider>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -142,5 +228,10 @@ const BookingsNavigationView: () => Node = () => {
     </Stack.Navigator>
   );
 };
+
+export const BookingContext = React.createContext({
+  booking: null,
+  removed: () => {},
+});
 
 export default BookingsNavigationView;

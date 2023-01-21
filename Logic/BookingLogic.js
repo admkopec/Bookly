@@ -1,7 +1,7 @@
 import Config from '../Configs/Config';
 import {getToken} from './AccountLogic';
 
-type Booking = {
+export type Booking = {
   id: string,
   name: string,
   dateFrom: number,
