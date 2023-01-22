@@ -3,11 +3,11 @@ import type {Node} from 'react';
 import {
   ActionSheetIOS,
   ActivityIndicator,
-  Button,
   Platform,
+  PlatformColor,
   SafeAreaView,
+  ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useColorScheme,
@@ -23,14 +23,29 @@ import {
 } from '../Logic/AccountLogic';
 import Icon from 'react-native-vector-icons/Ionicons';
 import NameEmailView from './NameEmailView';
-import PasswordSecurityView from "./PasswordSecurityView";
+import PasswordSecurityView from './PasswordSecurityView';
+import {cellContainer, sectionHeader} from './Cells/Styles';
 
 const UserCell = () => {
+  const isDarkMode = useColorScheme() === 'dark';
   const {user, update} = useContext(UserContext);
+  // TODO: Move font styling somewhere
+  const body = {
+    fontSize: 15,
+    color: isDarkMode ? Colors.white : Colors.black,
+  };
   // TODO: Add proper styling
   return user ? (
-    <View>
-      <Text>{user.name}</Text>
+    <View
+      style={[
+        cellContainer(isDarkMode),
+        {
+          marginTop: 22,
+          marginBottom: 42,
+          padding: 20,
+        },
+      ]}>
+      <Text style={body}>{user.name}</Text>
     </View>
   ) : (
     <ActivityIndicator />
@@ -38,11 +53,56 @@ const UserCell = () => {
 };
 
 const SettingCell = ({title, icon, onPress}) => {
-  // TODO: Add proper styling
+  const isDarkMode = useColorScheme() === 'dark';
+  // TODO: Move font styling somewhere
+  const body = {
+    paddingLeft: 10,
+    fontSize: 15,
+    color: isDarkMode ? Colors.white : Colors.black,
+  };
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Icon name={icon} size={20} />
-      <Text>{title}</Text>
+    <TouchableOpacity
+      style={[
+        cellContainer(isDarkMode),
+        {
+          justifyContent: 'space-between',
+        },
+      ]}
+      onPress={onPress}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <Icon name={icon} size={20} color={isDarkMode ? '#fff' : '#000'} />
+        <Text style={body}>{title}</Text>
+      </View>
+      <Icon name={'chevron-forward'} size={20} color={'#a0a0a0'} />
+    </TouchableOpacity>
+  );
+};
+
+const ButtonCell = ({title, onPress}) => {
+  const isDarkMode = useColorScheme() === 'dark';
+  // TODO: Move font styling somewhere
+  const body = {
+    fontSize: 16,
+    textAlign: 'center',
+    color: Platform.OS === 'ios' ? PlatformColor('systemRed') : '#f00',
+  };
+  return (
+    <TouchableOpacity
+      style={[
+        cellContainer(isDarkMode),
+        {
+          marginTop: 32,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+      ]}
+      onPress={onPress}>
+      <Text style={body}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -79,12 +139,11 @@ const AccountView = ({route, navigation}) => {
 
   const containerStyle = {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginHorizontal: 20,
   };
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+    backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
   };
 
   return (
@@ -93,30 +152,32 @@ const AccountView = ({route, navigation}) => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <UserCell />
-      <Text>Settings</Text>
-      <SettingCell
-        title={'Name & Email'}
-        icon={'person'}
-        onPress={() => {
-          navigation.navigate('NameEmail');
-        }}
-      />
-      <SettingCell
-        title={'Password & Security'}
-        icon={'lock-closed'}
-        onPress={() => {
-          navigation.navigate('PasswordSecurity');
-        }}
-      />
-      <SettingCell
-        title={'Membership'}
-        icon={'star'}
-        onPress={() => {
-          navigation.navigate('Membership');
-        }}
-      />
-      <Button title={'Sign Out'} onPress={signOutClicked} />
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <UserCell />
+        <Text style={sectionHeader}>settings</Text>
+        <SettingCell
+          title={'Name & Email'}
+          icon={'person'}
+          onPress={() => {
+            navigation.navigate('NameEmail');
+          }}
+        />
+        <SettingCell
+          title={'Password & Security'}
+          icon={'lock-closed'}
+          onPress={() => {
+            navigation.navigate('PasswordSecurity');
+          }}
+        />
+        <SettingCell
+          title={'Membership'}
+          icon={'star'}
+          onPress={() => {
+            navigation.navigate('Membership');
+          }}
+        />
+        <ButtonCell title={'Sign Out'} onPress={signOutClicked} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -126,7 +187,9 @@ const AccountNavigationView: () => Node = () => {
   const [user, setUser] = useState();
   const update = user => {
     setUser(user);
-    fetchUser().then(e => setUser(e)).catch(error => console.error(error));
+    fetchUser()
+      .then(e => setUser(e))
+      .catch(error => console.error(error));
   };
   useEffect(() => {
     update();

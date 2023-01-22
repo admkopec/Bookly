@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import type {Node} from 'react';
 import {
   ActivityIndicator,
   Modal,
   SafeAreaView,
-  ScrollView,
   SectionList,
   StatusBar,
   StyleSheet,
@@ -15,11 +13,10 @@ import {
   View,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {fetchBookings} from '../Logic/BookingLogic';
 import PresentationContext from '../Logic/PresentationContext';
-import BookingView from './BookingView';
-import type {Booking} from '../Logic/BookingLogic';
+import OfferView from './OfferView';
+import {fetchParklyOffers} from '../Logic/OfferLogic';
+import type {Offer} from '../Logic/OfferLogic';
 import NoItemsCell from './Cells/NoItemsCell';
 import {cellContainer, sectionHeader} from './Cells/Styles';
 
@@ -27,27 +24,26 @@ const SectionHeader: ({title: string}) => Node = ({title}) => {
   return <Text style={sectionHeader}>{title}</Text>;
 };
 
-const BookingItem: ({booking: Booking, onPress: () => void}) => Node = ({
-  booking,
+const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({
+  offer,
   onPress,
 }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <TouchableOpacity style={cellContainer(isDarkMode)} onPress={onPress}>
-      <Text>{booking}</Text>
+      <Text>{offer}</Text>
     </TouchableOpacity>
   );
 };
 
-const BookingsView = ({route, navigation}) => {
+const OffersView = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [endReached, setEndReached] = useState(endReached);
   const [sections, setSections] = useState([]);
-  const [searchText, setSearchText] = useState('');
-  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [selectedOffer, setSelectedOffer] = useState(null);
 
   const containerStyle = {
     flex: 1,
@@ -59,32 +55,22 @@ const BookingsView = ({route, navigation}) => {
   };
   // Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
   const update = () => {
-    fetchBookings(page)
-      .then(bookings => {
-        // TODO: Support searching
+    // FIXME: Use proper params for the search results fetching
+    fetchParklyOffers(page)
+      .then(offers => {
         // TODO: Support some additional sorting
-        // Split bookings based on `dateFrom`
-        const upcoming = bookings.filter(e => e.dateFrom > Date());
-        const previous = bookings.filter(e => e.dateFrom < Date());
         let sectionsDraft = isRefreshing ? [] : sections;
-        if (upcoming.length > 0) {
-          if (sectionsDraft[0].title === 'Upcoming') {
-            sectionsDraft[0].data = [...sectionsDraft[0].data, ...upcoming];
-          } else {
-            sectionsDraft.push({title: 'Upcoming', data: upcoming});
-          }
-        }
-        if (previous.length > 0) {
-          if (sectionsDraft[0].title === 'Previous') {
-            sectionsDraft[0].data = [...sectionsDraft[0].data, ...previous];
-          } else if (sectionsDraft[1].title === 'Previous') {
-            sectionsDraft[1].data = [...sectionsDraft[1].data, ...previous];
-          } else {
-            sectionsDraft.push({title: 'Previous', data: previous});
-          }
-        }
-        if (bookings.length === 0) {
+        if (offers.length === 0) {
           setEndReached(true);
+        } else {
+          if (page === 1) {
+            sectionsDraft[0] = {title: 'Recommended', data: offers[0]};
+            sectionsDraft[1] = {title: '', data: offers.splice(1, -1)};
+          } else {
+            if (sectionsDraft.length > 1) {
+              sectionsDraft[1].data = [...sectionsDraft[1].data, ...offers];
+            }
+          }
         }
         setSections(sectionsDraft);
         setIsMoreLoading(false);
@@ -100,23 +86,6 @@ const BookingsView = ({route, navigation}) => {
   useEffect(() => {
     update();
   }, [page]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerSearchBarOptions: {
-        onChangeText: e => setSearchText(e.nativeEvent.text),
-      },
-    });
-  }, [navigation]);
-
-  const removeFromSections = (booking: Booking) => {
-    let sectionsDraft = sections;
-    for (let i = 0; i < sectionsDraft.length; i++) {
-      sectionsDraft[i].data = sectionsDraft[i].data.filter(
-        e => e.id !== booking.id,
-      );
-    }
-  };
 
   const renderFooter = title => {
     if (isMoreLoading && title === sections[sections.length - 1].title) {
@@ -136,16 +105,17 @@ const BookingsView = ({route, navigation}) => {
         refreshing={isRefreshing}
         keyExtractor={(item, index) => index}
         renderItem={({item}) => (
-          <BookingItem
-            booking={item}
-            onPress={() => setSelectedBooking(item)}
-          />
+          <OfferItem offer={item} onPress={() => setSelectedOffer(item)} />
         )}
         renderSectionHeader={({section: {title}}) => (
           <SectionHeader title={title} />
         )}
         renderSectionFooter={({section: {title}}) => renderFooter(title)}
-        ListEmptyComponent={<NoItemsCell text={"You haven't made any Bookings yet!"} />}
+        ListEmptyComponent={
+          <NoItemsCell
+            text={"We couldn't find any offers matching the criteria!"}
+          />
+        }
         onEndReachedThreshold={0.2}
         onEndReached={() => {
           if (!endReached) {
@@ -160,14 +130,14 @@ const BookingsView = ({route, navigation}) => {
         }}
       />
       <Modal
-        visible={selectedBooking !== null}
+        visible={selectedOffer !== null}
         animationType="slide"
         presentationStyle={'pageSheet'}>
         <View style={{flex: 1}}>
           <TouchableWithoutFeedback
             onPressOut={e => {
               if (e.nativeEvent.locationY > 150) {
-                setSelectedBooking(null);
+                setSelectedOffer(null);
               }
             }}>
             <></>
@@ -175,19 +145,10 @@ const BookingsView = ({route, navigation}) => {
           <PresentationContext.Provider
             value={{
               dismiss: () => {
-                setSelectedBooking(null);
+                setSelectedOffer(null);
               },
             }}>
-            <BookingContext.Provider
-              value={{
-                booking: selectedBooking,
-                removed: () => {
-                  removeFromSections(selectedBooking);
-                  setSelectedBooking(null);
-                },
-              }}>
-              <BookingView />
-            </BookingContext.Provider>
+            <OfferView />
           </PresentationContext.Provider>
         </View>
       </Modal>
@@ -195,41 +156,4 @@ const BookingsView = ({route, navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-const Stack = createNativeStackNavigator();
-const BookingsNavigationView: () => Node = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Bookings"
-        options={{headerLargeTitle: true}}
-        component={BookingsView}
-      />
-    </Stack.Navigator>
-  );
-};
-
-export const BookingContext = React.createContext({
-  booking: null,
-  removed: () => {},
-});
-
-export default BookingsNavigationView;
+export default OffersView;

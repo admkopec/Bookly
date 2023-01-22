@@ -38,7 +38,7 @@ const BookingNavigationView: () => Node = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Booking"
+        name="Overview"
         options={{
           headerRight: () => (
             <Button title="Cancel" onPress={() => dismiss()} />

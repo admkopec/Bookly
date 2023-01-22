@@ -19,6 +19,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DatePicker from 'react-native-date-picker';
+import SearchResultsView from "./SearchResultsView";
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -48,7 +49,7 @@ const Section = ({children, title}): Node => {
   );
 };
 
-const SearchView = () => {
+const SearchView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
@@ -80,6 +81,7 @@ const SearchView = () => {
             setOpen(false);
           }}
         />
+        <Button title="Search" onPress={() => navigation.navigate('Results')} />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -133,6 +135,13 @@ const SearchNavigationView: () => Node = () => {
           headerLargeTitle: true,
         }}
         component={SearchView}
+      />
+      <Stack.Screen
+        name="Results"
+        options={{
+          headerLargeTitle: true,
+        }}
+        component={SearchResultsView}
       />
     </Stack.Navigator>
   );

@@ -3,7 +3,9 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
+  PlatformColor,
   SafeAreaView,
+  ScrollView,
   StatusBar,
   Text,
   TextInput,
@@ -17,6 +19,29 @@ import {updateUser, UserContext} from '../Logic/AccountLogic';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import PresentationContext from '../Logic/PresentationContext';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {cellContainer} from './Cells/Styles';
+
+const ButtonCell = ({title, onPress}) => {
+  const isDarkMode = useColorScheme() === 'dark';
+  // TODO: Move font styling somewhere
+  const body = {
+    fontSize: 16,
+    textAlign: 'left',
+    color: Platform.OS === 'ios' ? PlatformColor('link') : '#0050ff',
+  };
+  return (
+    <TouchableOpacity
+      style={[
+        cellContainer(isDarkMode),
+        {
+          marginTop: 32,
+        },
+      ]}
+      onPress={onPress}>
+      <Text style={body}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const PasswordSecurityView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -24,12 +49,11 @@ const PasswordSecurityView = ({route, navigation}) => {
 
   const containerStyle = {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginHorizontal: 20,
   };
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+    backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
   };
 
   return (
@@ -38,7 +62,12 @@ const PasswordSecurityView = ({route, navigation}) => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Button title={'Change Password'} onPress={() => setIsPresented(true)} />
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <ButtonCell
+          title={'Change Password'}
+          onPress={() => setIsPresented(true)}
+        />
+      </ScrollView>
       <Modal
         visible={isPresented}
         animationType="slide"
