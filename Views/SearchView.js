@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import type {Node} from 'react';
 import {
   Button,
@@ -19,7 +19,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DatePicker from 'react-native-date-picker';
-import SearchResultsView from "./SearchResultsView";
+import SearchResultsView from './SearchResultsView';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -51,11 +51,23 @@ const Section = ({children, title}): Node => {
 
 const SearchView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
+  const {service, searchCriteria, update} = useContext(SearchContext);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  const searchButtonClicked = () => {
+    // TODO: ¡Implement!
+    update('flatly', {
+      location: '',
+      dateFrom: date,
+      dateTo: date,
+      // ...
+    });
+    navigation.navigate('Results');
   };
 
   return (
@@ -81,7 +93,7 @@ const SearchView = ({route, navigation}) => {
             setOpen(false);
           }}
         />
-        <Button title="Search" onPress={() => navigation.navigate('Results')} />
+        <Button title="Search" onPress={searchButtonClicked} />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -127,24 +139,38 @@ const styles = StyleSheet.create({
 
 const Stack = createNativeStackNavigator();
 const SearchNavigationView: () => Node = () => {
+  const [service, setService] = useState('flatly');
+  const [searchCriteria, setSearchCriteria] = useState(null);
+  const update = (service, searchCriteria) => {
+    setService(service);
+    setSearchCriteria(searchCriteria);
+  };
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Bookly"
-        options={{
-          headerLargeTitle: true,
-        }}
-        component={SearchView}
-      />
-      <Stack.Screen
-        name="Results"
-        options={{
-          headerLargeTitle: true,
-        }}
-        component={SearchResultsView}
-      />
-    </Stack.Navigator>
+    <SearchContext.Provider value={{service, searchCriteria, update}}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Bookly"
+          options={{
+            headerLargeTitle: true,
+          }}
+          component={SearchView}
+        />
+        <Stack.Screen
+          name="Results"
+          options={{
+            headerLargeTitle: true,
+          }}
+          component={SearchResultsView}
+        />
+      </Stack.Navigator>
+    </SearchContext.Provider>
   );
 };
+
+export const SearchContext = React.createContext({
+  service: 'flatly',
+  searchCriteria: null,
+  update: () => {},
+});
 
 export default SearchNavigationView;

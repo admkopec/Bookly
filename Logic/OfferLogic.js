@@ -1,6 +1,18 @@
 import Config from '../Configs/Config';
 import {getToken} from './AccountLogic';
 
+export type OfferSearchCriteria = {
+    // Base criteria
+    location: string,
+    dateFrom: Date,
+    dateTo: Date,
+    // Additional parameters
+    carType: string | null,
+    numberOfAdults: number | null,
+    numberOfKids: number | null,
+    numberOfSpaces: number | null,
+}
+
 export type Offer = {
     id: string,
     // ...
@@ -27,16 +39,11 @@ export const fetchOffer = async (offerId: string, service: string): Promise<Offe
   });
 };
 
-export const fetchParklyOffers = async (location: string, dateFrom: Date, dateTo: Date, numberOfSpaces: number): Promise<[Offer]> => {
+export const fetchOffers = async (service: string, searchCriteria: OfferSearchCriteria, page: number): Promise<[Offer]> => {
   // TODO: Implement search criteria and paging
-  // Make a GET request to /logic/api/offers/parkly endpoint
+  // Make a GET request to /logic/api/offers/{service} endpoint
   return await fetch(
-    Config.booklyUrl +
-      '/logic/api/offers/parkly/?location=' + location +
-      '&dateFrom=' + Math.floor(dateFrom.getTime() / 1000) +
-      '&dateTo=' + Math.floor(dateTo.getTime() / 1000) +
-      '&numberOfSpaces=' + numberOfSpaces,
-    {
+    Config.booklyUrl + '/logic/api/offers/' + service + '/' + searchCriteriaToQuery(searchCriteria) + '&page=' + page, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
@@ -56,61 +63,21 @@ export const fetchParklyOffers = async (location: string, dateFrom: Date, dateTo
   });
 };
 
-export const fetchCarlyOffers = async (location: string, dateFrom: Date, dateTo: Date, carType): Promise<[Offer]> => {
-  // TODO: Implement search criteria and paging
-  // Make a GET request to /logic/api/offers/carly endpoint
-  return await fetch(
-      Config.booklyUrl +
-      '/logic/api/offers/carly/?location=' + location +
-      '&dateFrom=' + Math.floor(dateFrom.getTime() / 1000) +
-      '&dateTo=' + Math.floor(dateTo.getTime() / 1000) +
-      '&carType=' + carType,
-      {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-          Authorization: 'Bearer ' + (await getToken()),
-        },
-      },
-  ).then(e => {
-      if (e.status === 404) {
-          return [];
-      }
-      if (e.status !== 200) {
-          throw Error('Network error');
-      }
-      return e.json();
-  });
-};
-
-export const fetchFlatlyOffers = async (location: string, dateFrom: Date, dateTo: Date, numberOfAdults: number, numberOfKids: number): Promise<[Offer]> => {
-  // TODO: Implement search criteria and paging
-  // Make a GET request to /logic/api/offers/flatly endpoint
-  return await fetch(
-      Config.booklyUrl +
-      '/logic/api/offers/flatly/?location=' + location +
-      '&dateFrom=' + Math.floor(dateFrom.getTime() / 1000) +
-      '&dateTo=' + Math.floor(dateTo.getTime() / 1000) +
-      '&numberOfAdults=' + numberOfAdults +
-      '&numberOfKids=' + numberOfKids,
-      {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-          Authorization: 'Bearer ' + (await getToken()),
-        },
-      },
-  ).then(e => {
-      if (e.status === 404) {
-          return [];
-      }
-      if (e.status !== 200) {
-          throw Error('Network error');
-      }
-      return e.json();
-  });
+const searchCriteriaToQuery = (searchCriteria: OfferSearchCriteria) => {
+    let queryString = '?location=' + searchCriteria.location +
+        '&dateFrom=' + Math.floor(searchCriteria.dateFrom.getTime() / 1000) +
+        '&dateTo=' + Math.floor(searchCriteria.dateTo.getTime() / 1000);
+    if (searchCriteria.numberOfSpaces) {
+        queryString += '&numberOfSpaces=' + searchCriteria.numberOfSpaces;
+    }
+    if (searchCriteria.numberOfAdults) {
+        queryString += '&numberOfAdults=' + searchCriteria.numberOfAdults;
+    }
+    if (searchCriteria.numberOfKids) {
+        queryString += '&numberOfKids=' + searchCriteria.numberOfKids;
+    }
+    if (searchCriteria.carType) {
+        queryString += '&carType=' + searchCriteria.carType;
+    }
+    return queryString;
 };

@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {fetchBookings} from '../Logic/BookingLogic';
+import {fetchBookings, BookingContext} from '../Logic/BookingLogic';
 import PresentationContext from '../Logic/PresentationContext';
 import BookingView from './BookingView';
 import type {Booking} from '../Logic/BookingLogic';
@@ -25,11 +25,9 @@ const SectionHeader: ({title: string}) => Node = ({title}) => {
   return <Text style={sectionHeader}>{title}</Text>;
 };
 
-const BookingItem: ({booking: Booking, onPress: () => void}) => Node = ({
-  booking,
-  onPress,
-}) => {
+const BookingItem: ({booking: Booking, onPress: () => void}) => Node = ({booking, onPress}) => {
   const isDarkMode = useColorScheme() === 'dark';
+  // TODO: ¡Implement!
   return (
     <TouchableOpacity style={cellContainer(isDarkMode)} onPress={onPress}>
       <Text>{booking}</Text>
@@ -170,7 +168,7 @@ const BookingsView = ({route, navigation}) => {
             <BookingContext.Provider
               value={{
                 booking: selectedBooking,
-                removed: () => {
+                update: () => {
                   removeFromSections(selectedBooking);
                   setSelectedBooking(null);
                 },
@@ -215,10 +213,5 @@ const BookingsNavigationView: () => Node = () => {
     </Stack.Navigator>
   );
 };
-
-export const BookingContext = React.createContext({
-  booking: null,
-  removed: () => {},
-});
 
 export default BookingsNavigationView;

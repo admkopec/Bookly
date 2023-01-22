@@ -1,3 +1,4 @@
+import React from 'react';
 import Config from '../Configs/Config';
 import {getToken} from './AccountLogic';
 
@@ -6,8 +7,14 @@ export type Booking = {
   name: string,
   dateFrom: number,
   dateTo: number,
+  offerId: string,
   // ...
 };
+
+export const BookingContext = React.createContext({
+  booking: null,
+  update: () => {},
+});
 
 export const fetchBookings = async (page: number): Promise<[Booking]> => {
   // TODO: Implement additional paging parameters

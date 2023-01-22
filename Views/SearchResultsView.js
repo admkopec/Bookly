@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Modal,
@@ -12,21 +12,21 @@ import {
   View,
 } from 'react-native';
 import PresentationContext from '../Logic/PresentationContext';
-import OfferView from './OfferView';
-import {fetchParklyOffers} from '../Logic/OfferLogic';
+import {fetchOffers} from '../Logic/OfferLogic';
 import type {Offer} from '../Logic/OfferLogic';
 import NoItemsCell from './Cells/NoItemsCell';
 import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
+import {SearchContext} from "./SearchView";
+import {BookingContext} from "../Logic/BookingLogic";
+import BookingView from "./BookingView";
 
 const SectionHeader: ({title: string}) => Node = ({title}) => {
   return <Text style={sectionHeader}>{title}</Text>;
 };
 
-const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({
-  offer,
-  onPress,
-}) => {
+const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({offer, onPress}) => {
   const isDarkMode = useColorScheme() === 'dark';
+  // TODO: ¡Implement!
   return (
     <TouchableOpacity style={cellContainer(isDarkMode)} onPress={onPress}>
       <Text>{offer}</Text>
@@ -36,6 +36,7 @@ const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({
 
 const OffersView = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const {service, searchCriteria} = useContext(SearchContext);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -45,8 +46,7 @@ const OffersView = () => {
 
   // Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
   const update = () => {
-    // FIXME: Use proper params for the search results fetching
-    fetchParklyOffers(page)
+    fetchOffers(service, searchCriteria, page)
       .then(offers => {
         // TODO: Support some additional sorting
         let sectionsDraft = isRefreshing ? [] : sections;
@@ -137,7 +137,21 @@ const OffersView = () => {
                 setSelectedOffer(null);
               },
             }}>
-            <OfferView />
+            <BookingContext.Provider
+              value={{
+                booking: {
+                  id: null,
+                  name: selectedOffer ? selectedOffer.name : null,
+                  dateFrom: searchCriteria.dateFrom,
+                  dateTo: searchCriteria.dateTo,
+                  offerId: selectedOffer ? selectedOffer.id : null,
+                },
+                update: () => {
+                  // TODO: Figure out if we need to do something here…
+                },
+              }}>
+              <BookingView />
+            </BookingContext.Provider>
           </PresentationContext.Provider>
         </View>
       </Modal>

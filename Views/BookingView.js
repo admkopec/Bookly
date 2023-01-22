@@ -1,16 +1,16 @@
 import React from 'react';
-import {Button, SafeAreaView, Text, useColorScheme, View} from 'react-native';
+import {Button, Platform, PlatformColor, SafeAreaView, useColorScheme, View} from 'react-native';
 import PresentationContext from '../Logic/PresentationContext';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useContext} from 'react';
-import {cancelBooking} from '../Logic/BookingLogic';
-import {BookingContext} from './BookingsView';
+import {cancelBooking, createBooking, BookingContext} from '../Logic/BookingLogic';
+import FilledButton from './Buttons/FilledButton';
 
 const BookingView = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const {booking, removed} = useContext(BookingContext);
+  const {dismiss} = useContext(PresentationContext);
+  const {booking, update} = useContext(BookingContext);
 
   const containerStyle = {
     flex: 1,
@@ -24,10 +24,12 @@ const BookingView = () => {
 
   return (
     <SafeAreaView style={[backgroundStyle, containerStyle]}>
-      <TouchableOpacity
-        onPress={() => cancelBooking(booking.id).then(() => removed())}>
-        <Text>Cancel Booking</Text>
-      </TouchableOpacity>
+      {booking.id !== null ?
+        <FilledButton title={'Cancel Booking'} color={Platform.OS === 'ios' ? PlatformColor('systemRed') : '#f00'}
+                      onPress={() => cancelBooking(booking.id).then(() => update())} />
+        :
+        <FilledButton title={'Book'} onPress={() => createBooking(booking).then(() => dismiss())} />
+      }
     </SafeAreaView>
   );
 };

@@ -57,9 +57,9 @@ const SelectionView = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Text style={titleText}>Bookly</Text>
-          <FilledButton title="Sign In" width={260} onPress={() => setSignInSelected(true)} />
+          <FilledButton title="Sign In" onPress={() => setSignInSelected(true)} />
           <View style={{marginVertical: 15}} />
-          <FilledButton title="Sign Up" width={260} color={Platform.OS === 'ios' ? PlatformColor('systemTeal') : '#0af'} onPress={() => setSignUpSelected(true)} />
+          <FilledButton title="Sign Up" color={Platform.OS === 'ios' ? PlatformColor('systemTeal') : '#0af'} onPress={() => setSignUpSelected(true)} />
         </View>
         <Modal
           visible={signInSelected}

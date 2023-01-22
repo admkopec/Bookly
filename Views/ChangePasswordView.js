@@ -58,7 +58,7 @@ const ChangePasswordView = () => {
   return (
     <SafeAreaView
       style={[backgroundStyle, containerStyle, {marginHorizontal: 0}]}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView style={containerStyle}>
         <View style={{marginTop: 62}}>
           <View style={textFieldContainer}>
             <TextInput
@@ -77,7 +77,7 @@ const ChangePasswordView = () => {
             />
           </View>
           <View style={{marginTop: 23, width: '100%', alignItems: 'center'}}>
-            <FilledButton title={'Change'} width={260} onPress={() => save()} />
+            <FilledButton title={'Change'} onPress={() => save()} />
           </View>
         </View>
       </KeyboardAwareScrollView>

@@ -6,7 +6,7 @@ import React from 'react';
 const FilledButton = ({
   title,
   color = Platform.OS === 'ios' ? PlatformColor('link') : '#0050ff',
-  width = '80%',
+  width = 260,
   onPress,
 }) => {
   const fontStyle = {

@@ -54,7 +54,7 @@ const SignInView = () => {
 
   return (
     <SafeAreaView style={[backgroundStyle, containerStyle, {marginHorizontal: 0}]}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView style={containerStyle}>
         <View style={backgroundStyle}>
           <Text style={titleText}>Bookly</Text>
           <View style={textFieldContainer}>
