@@ -8,7 +8,7 @@ export const cellContainer = (isDarkMode: boolean) => {
     marginVertical: 8,
     padding: 12,
     borderRadius: 10,
-    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
+    backgroundColor: Platform.OS === 'ios' ? PlatformColor('secondarySystemGroupedBackgroundColor') : (isDarkMode ? Colors.darker : Colors.white),
     color: isDarkMode ? Colors.white : Colors.black,
   };
 };
@@ -26,5 +26,6 @@ export const tableViewStyle = (isDarkMode: boolean) => {
     flex: 1,
     marginHorizontal: 20,
     backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
+    //backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemGroupedBackgroundColor') : (isDarkMode ? Colors.black : Colors.lighter),
   };
 };

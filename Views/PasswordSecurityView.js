@@ -1,6 +1,4 @@
 import {
-  Button,
-  KeyboardAvoidingView,
   Modal,
   Platform,
   PlatformColor,
@@ -8,19 +6,15 @@ import {
   ScrollView,
   StatusBar,
   Text,
-  TextInput,
   TouchableWithoutFeedback,
   useColorScheme,
   View,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {updateUser, UserContext} from '../Logic/AccountLogic';
+import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import PresentationContext from '../Logic/PresentationContext';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {cellContainer, tableViewStyle} from './Cells/Styles';
-import ChangePasswordView from "./ChangePasswordView";
+import ChangePasswordView from './ChangePasswordView';
 
 const ButtonCell = ({title, onPress}) => {
   const isDarkMode = useColorScheme() === 'dark';

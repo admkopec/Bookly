@@ -35,7 +35,7 @@ const UserCell = () => {
     color: isDarkMode ? Colors.white : Colors.black,
   };
   // TODO: Add proper styling
-  return user ? (
+  return (
     <View
       style={[
         cellContainer(isDarkMode),
@@ -45,10 +45,19 @@ const UserCell = () => {
           padding: 20,
         },
       ]}>
-      <Text style={body}>{user.name}</Text>
+      {user ? (
+        <Text style={body}>{user.name}</Text>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <ActivityIndicator />
+        </View>
+      )}
     </View>
-  ) : (
-    <ActivityIndicator />
   );
 };
 

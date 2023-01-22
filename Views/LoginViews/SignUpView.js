@@ -1,11 +1,8 @@
-import React, {createRef, useContext, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Button,
-  KeyboardAvoidingView,
-  Platform,
+  Platform, PlatformColor,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   Text,
   TextInput,
   useColorScheme,
@@ -16,20 +13,40 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {Node} from 'react';
 import {AccountContext, register} from '../../Logic/AccountLogic';
 import PresentationContext from '../../Logic/PresentationContext';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import FilledButton from '../Buttons/FilledButton';
 
 const SignUpView = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const {isSignedIn, update} = useContext(AccountContext);
   const {dismiss} = useContext(PresentationContext);
+
   const containerStyle = {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginHorizontal: 20,
   };
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
+    backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemBackgroundColor') : (isDarkMode ? Colors.darker : Colors.white),
+  };
+
+  const titleText = {
+    fontSize: 32,
+    textAlign: 'center',
+    fontWeight: '600',
+    marginTop: 92,
+    marginBottom: 62,
+    color: isDarkMode ? Colors.white: Colors.black,
+  }
+
+  const textFieldContainer = {
+    borderTopWidth: 1,
+    borderColor: Platform.OS === 'ios' ? PlatformColor('separatorColor') : '#d0d0d0',
+    borderBottomWidth: 1,
+    borderStyle: 'solid',
+    paddingHorizontal: 10,
+    paddingVertical: 9,
+    marginVertical: 8,
   };
 
   const [name, setName] = useState('');
@@ -38,17 +55,26 @@ const SignUpView = () => {
   const [repeatPassword, setRepeatPassword] = useState('');
 
   return (
-    <SafeAreaView style={[backgroundStyle, containerStyle]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={containerStyle}>
+    <SafeAreaView style={[backgroundStyle, containerStyle, {marginHorizontal: 0}]}>
+      <KeyboardAwareScrollView>
         <View style={backgroundStyle}>
-          <Text>Bookly</Text>
+          <Text style={titleText}>Bookly</Text>
+          <View style={textFieldContainer}>
           <TextInput placeholder="Name" onChangeText={newText => setName(newText)} />
+          </View>
+          <View style={textFieldContainer}>
           <TextInput placeholder="Email" onChangeText={newText => setEmail(newText)} />
+          </View>
+          <View style={textFieldContainer}>
           <TextInput placeholder="Password" secureTextEntry={true} onChangeText={newText => setPassword(newText)} />
+          </View>
+          <View style={textFieldContainer}>
           <TextInput placeholder="Repeat Password" secureTextEntry={true} onChangeText={newText => setRepeatPassword(newText)} />
-          <TouchableOpacity
+          </View>
+          <View style={{marginTop: 32, width: '100%', alignItems: 'center'}}>
+          <FilledButton
+              title={'Sign Up'}
+              width={260}
             onPress={() => {
               if (password === repeatPassword) {
                 register(
@@ -66,11 +92,10 @@ const SignUpView = () => {
                     console.error(error);
                   });
               }
-            }}>
-            <Text>Sign Up</Text>
-          </TouchableOpacity>
+            }}/>
+          </View>
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

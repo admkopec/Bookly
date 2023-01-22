@@ -1,8 +1,8 @@
 import React, {useContext, useState} from 'react';
 import {
   Button,
-  KeyboardAvoidingView,
   Platform,
+  PlatformColor,
   SafeAreaView,
   Text,
   TextInput,
@@ -12,7 +12,8 @@ import {
 import {updateUser, UserContext} from '../Logic/AccountLogic';
 import PresentationContext from '../Logic/PresentationContext';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import FilledButton from './Buttons/FilledButton';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const ChangePasswordView = () => {
@@ -24,12 +25,22 @@ const ChangePasswordView = () => {
 
   const containerStyle = {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginHorizontal: 20,
   };
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+    backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemBackgroundColor') : (isDarkMode ? Colors.darker : Colors.white),
+  };
+
+  const textFieldContainer = {
+    borderTopWidth: 1,
+    borderColor:
+      Platform.OS === 'ios' ? PlatformColor('separatorColor') : '#d0d0d0',
+    borderBottomWidth: 1,
+    borderStyle: 'solid',
+    paddingHorizontal: 10,
+    paddingVertical: 9,
+    marginVertical: 8,
   };
 
   const save = () => {
@@ -45,26 +56,31 @@ const ChangePasswordView = () => {
   };
 
   return (
-    <SafeAreaView style={[backgroundStyle, containerStyle]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={containerStyle}>
-        <View style={backgroundStyle}>
-          <TextInput
-            placeholder="Password"
-            secureTextEntry={true}
-            onChangeText={newText => setPassword(newText)}
-          />
-          <TextInput
-            placeholder="Repeat Password"
-            secureTextEntry={true}
-            onChangeText={newText => setRepeatPassword(newText)}
-          />
-          <TouchableOpacity onPress={() => save()}>
-            <Text>Change</Text>
-          </TouchableOpacity>
+    <SafeAreaView
+      style={[backgroundStyle, containerStyle, {marginHorizontal: 0}]}>
+      <KeyboardAwareScrollView>
+        <View style={{marginTop: 62}}>
+          <View style={textFieldContainer}>
+            <TextInput
+              style={{width: '100%'}}
+              placeholder="Password"
+              secureTextEntry={true}
+              onChangeText={newText => setPassword(newText)}
+            />
+          </View>
+          <View style={textFieldContainer}>
+            <TextInput
+              style={{width: '100%'}}
+              placeholder="Repeat Password"
+              secureTextEntry={true}
+              onChangeText={newText => setRepeatPassword(newText)}
+            />
+          </View>
+          <View style={{marginTop: 23, width: '100%', alignItems: 'center'}}>
+            <FilledButton title={'Change'} width={260} onPress={() => save()} />
+          </View>
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

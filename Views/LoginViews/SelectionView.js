@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Button,
-  Modal,
+  Modal, Platform, PlatformColor,
   SafeAreaView,
   StatusBar,
   Text,
@@ -14,6 +14,7 @@ import {useState} from 'react';
 import SignUpView from './SignUpView';
 import SignInView from './SignInView';
 import PresentationContext from '../../Logic/PresentationContext';
+import FilledButton from '../Buttons/FilledButton';
 
 const SelectionView = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,13 +23,22 @@ const SelectionView = () => {
 
   const containerStyle = {
     flex: 1,
-    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
+    backgroundColor: isDarkMode ? Colors.black : Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   };
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.white,
+    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+  };
+
+  const titleText = {
+    fontSize: 32,
+    textAlign: 'center',
+    fontWeight: '600',
+    marginTop: 92,
+    marginBottom: 62,
+    color: isDarkMode ? Colors.white: Colors.black,
   };
 
   return (
@@ -46,9 +56,10 @@ const SelectionView = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Text>Bookly</Text>
-          <Button title="Sign In" onPress={() => setSignInSelected(true)} />
-          <Button title="Sign Up" onPress={() => setSignUpSelected(true)} />
+          <Text style={titleText}>Bookly</Text>
+          <FilledButton title="Sign In" width={260} onPress={() => setSignInSelected(true)} />
+          <View style={{marginVertical: 15}} />
+          <FilledButton title="Sign Up" width={260} color={Platform.OS === 'ios' ? PlatformColor('systemTeal') : '#0af'} onPress={() => setSignUpSelected(true)} />
         </View>
         <Modal
           visible={signInSelected}

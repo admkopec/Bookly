@@ -15,8 +15,8 @@ import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
 const NameEmailView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const {user, update} = useContext(UserContext);
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
+  const [name, setName] = useState(user ? user.name : '');
+  const [email, setEmail] = useState(user ? user.email : '');
 
   const saveClicked = () => {
     updateUser(name, email, null)
