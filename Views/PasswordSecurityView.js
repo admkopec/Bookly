@@ -132,10 +132,12 @@ const ChangePasswordView = () => {
         <View style={backgroundStyle}>
           <TextInput
             placeholder="Password"
+            secureTextEntry={true}
             onChangeText={newText => setPassword(newText)}
           />
           <TextInput
             placeholder="Repeat Password"
+            secureTextEntry={true}
             onChangeText={newText => setRepeatPassword(newText)}
           />
           <TouchableOpacity onPress={() => save()}>

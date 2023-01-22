@@ -46,6 +46,7 @@ const SignInView = () => {
           />
           <TextInput
             placeholder="Password"
+            secureTextEntry={true}
             onChangeText={newText => setPassword(newText)}
           />
           <TouchableOpacity

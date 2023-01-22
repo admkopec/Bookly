@@ -46,8 +46,8 @@ const SignUpView = () => {
           <Text>Bookly</Text>
           <TextInput placeholder="Name" onChangeText={newText => setName(newText)} />
           <TextInput placeholder="Email" onChangeText={newText => setEmail(newText)} />
-          <TextInput placeholder="Password" onChangeText={newText => setPassword(newText)} />
-          <TextInput placeholder="Repeat Password" onChangeText={newText => setRepeatPassword(newText)} />
+          <TextInput placeholder="Password" secureTextEntry={true} onChangeText={newText => setPassword(newText)} />
+          <TextInput placeholder="Repeat Password" secureTextEntry={true} onChangeText={newText => setRepeatPassword(newText)} />
           <TouchableOpacity
             onPress={() => {
               if (password === repeatPassword) {
