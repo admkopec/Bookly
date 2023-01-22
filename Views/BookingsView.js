@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   Modal,
   SafeAreaView,
-  ScrollView,
   SectionList,
   StatusBar,
   StyleSheet,
@@ -14,14 +13,13 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {fetchBookings} from '../Logic/BookingLogic';
 import PresentationContext from '../Logic/PresentationContext';
 import BookingView from './BookingView';
 import type {Booking} from '../Logic/BookingLogic';
 import NoItemsCell from './Cells/NoItemsCell';
-import {cellContainer, sectionHeader} from './Cells/Styles';
+import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
 
 const SectionHeader: ({title: string}) => Node = ({title}) => {
   return <Text style={sectionHeader}>{title}</Text>;
@@ -49,14 +47,6 @@ const BookingsView = ({route, navigation}) => {
   const [searchText, setSearchText] = useState('');
   const [selectedBooking, setSelectedBooking] = useState(null);
 
-  const containerStyle = {
-    flex: 1,
-    marginHorizontal: 20,
-  };
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
-  };
   // Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
   const update = () => {
     fetchBookings(page)
@@ -125,13 +115,12 @@ const BookingsView = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={[backgroundStyle, containerStyle]}>
+    <SafeAreaView style={tableViewStyle(isDarkMode)}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        barStyle={isDarkMode || selectedBooking !== null ? 'light-content' : 'dark-content'}
+        backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
       <SectionList
-        style={backgroundStyle}
         sections={sections}
         refreshing={isRefreshing}
         keyExtractor={(item, index) => index}

@@ -19,7 +19,8 @@ import {updateUser, UserContext} from '../Logic/AccountLogic';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import PresentationContext from '../Logic/PresentationContext';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {cellContainer} from './Cells/Styles';
+import {cellContainer, tableViewStyle} from './Cells/Styles';
+import ChangePasswordView from "./ChangePasswordView";
 
 const ButtonCell = ({title, onPress}) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -43,24 +44,15 @@ const ButtonCell = ({title, onPress}) => {
   );
 };
 
-const PasswordSecurityView = ({route, navigation}) => {
+const PasswordSecurityView = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [isPresented, setIsPresented] = useState(false);
 
-  const containerStyle = {
-    flex: 1,
-    marginHorizontal: 20,
-  };
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={[backgroundStyle, containerStyle]}>
+    <SafeAreaView style={tableViewStyle(isDarkMode)}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        barStyle={isDarkMode || isPresented ? 'light-content' : 'dark-content'}
+        backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <ButtonCell
@@ -87,83 +79,11 @@ const PasswordSecurityView = ({route, navigation}) => {
                 setIsPresented(false);
               },
             }}>
-            <ChangePasswordNavigationView />
+            <ChangePasswordView />
           </PresentationContext.Provider>
         </View>
       </Modal>
     </SafeAreaView>
-  );
-};
-
-const ChangePasswordView = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const {user, update} = useContext(UserContext);
-  const {dismiss} = useContext(PresentationContext);
-  const [password, setPassword] = useState();
-  const [repeatPassword, setRepeatPassword] = useState();
-
-  const containerStyle = {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
-  };
-
-  const save = () => {
-    if (password !== repeatPassword || !password) {
-      return;
-    }
-    updateUser(null, null, password)
-      .then(e => {
-        update(e);
-        dismiss();
-      })
-      .catch(error => console.error(error));
-  };
-
-  return (
-    <SafeAreaView style={[backgroundStyle, containerStyle]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={containerStyle}>
-        <View style={backgroundStyle}>
-          <TextInput
-            placeholder="Password"
-            secureTextEntry={true}
-            onChangeText={newText => setPassword(newText)}
-          />
-          <TextInput
-            placeholder="Repeat Password"
-            secureTextEntry={true}
-            onChangeText={newText => setRepeatPassword(newText)}
-          />
-          <TouchableOpacity onPress={() => save()}>
-            <Text>Change</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-};
-
-const Stack = createNativeStackNavigator();
-const ChangePasswordNavigationView: () => Node = () => {
-  const {dismiss} = useContext(PresentationContext);
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Change Password"
-        options={{
-          headerRight: () => (
-            <Button title="Cancel" onPress={() => dismiss()} />
-          ),
-        }}
-        component={ChangePasswordView}
-      />
-    </Stack.Navigator>
   );
 };
 

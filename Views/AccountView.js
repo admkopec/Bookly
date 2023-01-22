@@ -24,7 +24,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import NameEmailView from './NameEmailView';
 import PasswordSecurityView from './PasswordSecurityView';
-import {cellContainer, sectionHeader} from './Cells/Styles';
+import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
 
 const UserCell = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -137,20 +137,11 @@ const AccountView = ({route, navigation}) => {
     }
   };
 
-  const containerStyle = {
-    flex: 1,
-    marginHorizontal: 20,
-  };
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={[backgroundStyle, containerStyle]}>
+    <SafeAreaView style={tableViewStyle(isDarkMode)}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <UserCell />

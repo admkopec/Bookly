@@ -5,20 +5,18 @@ import {
   SafeAreaView,
   SectionList,
   StatusBar,
-  StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   useColorScheme,
   View,
 } from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import PresentationContext from '../Logic/PresentationContext';
 import OfferView from './OfferView';
 import {fetchParklyOffers} from '../Logic/OfferLogic';
 import type {Offer} from '../Logic/OfferLogic';
 import NoItemsCell from './Cells/NoItemsCell';
-import {cellContainer, sectionHeader} from './Cells/Styles';
+import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
 
 const SectionHeader: ({title: string}) => Node = ({title}) => {
   return <Text style={sectionHeader}>{title}</Text>;
@@ -45,14 +43,6 @@ const OffersView = () => {
   const [sections, setSections] = useState([]);
   const [selectedOffer, setSelectedOffer] = useState(null);
 
-  const containerStyle = {
-    flex: 1,
-    marginHorizontal: 20,
-  };
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
-  };
   // Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
   const update = () => {
     // FIXME: Use proper params for the search results fetching
@@ -94,13 +84,12 @@ const OffersView = () => {
   };
 
   return (
-    <SafeAreaView style={[backgroundStyle, containerStyle]}>
+    <SafeAreaView style={tableViewStyle(isDarkMode)}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
       <SectionList
-        style={backgroundStyle}
         sections={sections}
         refreshing={isRefreshing}
         keyExtractor={(item, index) => index}

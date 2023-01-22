@@ -1,30 +1,22 @@
 import {
   Button,
   SafeAreaView,
+  ScrollView,
   StatusBar,
   Text,
   TextInput,
   useColorScheme,
+  View,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {updateUser, UserContext} from '../Logic/AccountLogic';
+import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
 
 const NameEmailView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const {user, update} = useContext(UserContext);
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
-
-  const containerStyle = {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
-  };
 
   const saveClicked = () => {
     updateUser(name, email, null)
@@ -40,23 +32,47 @@ const NameEmailView = ({route, navigation}) => {
   });
 
   return (
-    <SafeAreaView style={[backgroundStyle, containerStyle]}>
+    <SafeAreaView style={tableViewStyle(isDarkMode)}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
-      <Text>Name</Text>
-      <TextInput
-        placeholder={'Name'}
-        value={name}
-        onChangeText={text => setName(text)}
-      />
-      <Text>Email</Text>
-      <TextInput
-        placeholder={'email@example.com'}
-        value={email}
-        onChangeText={text => setEmail(text)}
-      />
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <Text
+          style={[
+            sectionHeader,
+            {
+              marginTop: 22,
+            },
+          ]}>
+          name
+        </Text>
+        <View style={cellContainer(isDarkMode)}>
+          <TextInput
+            style={{width: '100%'}}
+            placeholder={'Name'}
+            value={name}
+            onChangeText={text => setName(text)}
+          />
+        </View>
+        <Text
+          style={[
+            sectionHeader,
+            {
+              marginTop: 12,
+            },
+          ]}>
+          email
+        </Text>
+        <View style={cellContainer(isDarkMode)}>
+          <TextInput
+            style={{width: '100%'}}
+            placeholder={'email@example.com'}
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

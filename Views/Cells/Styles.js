@@ -20,3 +20,11 @@ export const sectionHeader = {
   fontVariant: ['small-caps'],
   color: Platform.OS === 'ios' ? PlatformColor('secondaryLabel') : '#a0a0a0',
 };
+
+export const tableViewStyle = (isDarkMode: boolean) => {
+  return {
+    flex: 1,
+    marginHorizontal: 20,
+    backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
+  };
+};
