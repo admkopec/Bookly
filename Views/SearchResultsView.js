@@ -54,7 +54,7 @@ const OffersView = () => {
           setEndReached(true);
         } else {
           if (page === 1) {
-            sectionsDraft[0] = {title: 'Recommended', data: offers[0]};
+            sectionsDraft[0] = {title: 'recommended', data: offers[0]};
             sectionsDraft[1] = {title: '', data: offers.splice(1, -1)};
           } else {
             if (sectionsDraft.length > 1) {

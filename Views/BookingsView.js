@@ -58,19 +58,19 @@ const BookingsView = ({route, navigation}) => {
         const previous = bookings.filter(e => e.dateFrom < Date());
         let sectionsDraft = isRefreshing ? [] : sections;
         if (upcoming.length > 0) {
-          if (sectionsDraft[0].title === 'Upcoming') {
+          if (sectionsDraft[0].title === 'upcoming') {
             sectionsDraft[0].data = [...sectionsDraft[0].data, ...upcoming];
           } else {
-            sectionsDraft.push({title: 'Upcoming', data: upcoming});
+            sectionsDraft.push({title: 'upcoming', data: upcoming});
           }
         }
         if (previous.length > 0) {
-          if (sectionsDraft[0].title === 'Previous') {
+          if (sectionsDraft[0].title === 'previous') {
             sectionsDraft[0].data = [...sectionsDraft[0].data, ...previous];
-          } else if (sectionsDraft[1].title === 'Previous') {
+          } else if (sectionsDraft[1].title === 'previous') {
             sectionsDraft[1].data = [...sectionsDraft[1].data, ...previous];
           } else {
-            sectionsDraft.push({title: 'Previous', data: previous});
+            sectionsDraft.push({title: 'previous', data: previous});
           }
         }
         if (bookings.length === 0) {
