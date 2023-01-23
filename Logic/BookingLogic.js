@@ -16,10 +16,10 @@ export const BookingContext = React.createContext({
   update: () => {},
 });
 
-export const fetchBookings = async (page: number): Promise<[Booking]> => {
+export const fetchBookings = async (page: number, searchQuery: string): Promise<[Booking]> => {
   // TODO: Implement additional paging parameters
   // Make a GET request to /logic/api/bookings endpoint
-  return await fetch(Config.booklyUrl + '/logic/api/bookings?page=' + page, {
+  return await fetch(Config.booklyUrl + '/logic/api/bookings?page=' + page + (searchQuery.length > 0 ? ('&search=' + searchQuery) : ''), {
     method: 'GET',
     mode: 'cors',
     cache: 'no-cache',

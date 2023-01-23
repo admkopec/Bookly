@@ -47,28 +47,37 @@ const BookingsView = ({route, navigation}) => {
 
   // Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
   const update = () => {
-    fetchBookings(page)
+    fetchBookings(page, searchText)
       .then(bookings => {
-        // TODO: Support searching
         // TODO: Support some additional sorting
-        // Split bookings based on `dateFrom`
-        const upcoming = bookings.filter(e => e.dateFrom > Date());
-        const previous = bookings.filter(e => e.dateFrom < Date());
         let sectionsDraft = isRefreshing ? [] : sections;
-        if (upcoming.length > 0) {
-          if (sectionsDraft[0].title === 'upcoming') {
-            sectionsDraft[0].data = [...sectionsDraft[0].data, ...upcoming];
+        if (searchText.length > 0) {
+          // Present search results
+          // TODO: Make sure that searching will not preserve previous values when searchTextChanges
+          if (sectionsDraft[0].title === '' && page > 1) {
+            sectionsDraft[0].data = [...sectionsDraft[0].data, ...bookings];
           } else {
-            sectionsDraft.push({title: 'upcoming', data: upcoming});
+            sectionsDraft = [{title: '', data: bookings}];
           }
-        }
-        if (previous.length > 0) {
-          if (sectionsDraft[0].title === 'previous') {
-            sectionsDraft[0].data = [...sectionsDraft[0].data, ...previous];
-          } else if (sectionsDraft[1].title === 'previous') {
-            sectionsDraft[1].data = [...sectionsDraft[1].data, ...previous];
-          } else {
-            sectionsDraft.push({title: 'previous', data: previous});
+        } else {
+          // Split bookings based on `dateFrom`
+          const upcoming = bookings.filter(e => e.dateFrom > Date());
+          const previous = bookings.filter(e => e.dateFrom < Date());
+          if (upcoming.length > 0) {
+            if (sectionsDraft[0].title === 'upcoming') {
+              sectionsDraft[0].data = [...sectionsDraft[0].data, ...upcoming];
+            } else {
+              sectionsDraft.push({title: 'upcoming', data: upcoming});
+            }
+          }
+          if (previous.length > 0) {
+            if (sectionsDraft[0].title === 'previous') {
+              sectionsDraft[0].data = [...sectionsDraft[0].data, ...previous];
+            } else if (sectionsDraft[1].title === 'previous') {
+              sectionsDraft[1].data = [...sectionsDraft[1].data, ...previous];
+            } else {
+              sectionsDraft.push({title: 'previous', data: previous});
+            }
           }
         }
         if (bookings.length === 0) {
@@ -92,7 +101,11 @@ const BookingsView = ({route, navigation}) => {
   useEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
-        onChangeText: e => setSearchText(e.nativeEvent.text),
+        onChangeText: e => {
+          setSearchText(e.nativeEvent.text);
+          setIsRefreshing(true);
+          update();
+        },
       },
     });
   }, [navigation]);
