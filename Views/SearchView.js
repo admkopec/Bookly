@@ -3,65 +3,56 @@ import type {Node} from 'react';
 import {
   Button,
   SafeAreaView,
-  ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
   useColorScheme,
   View,
 } from 'react-native';
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DatePicker from 'react-native-date-picker';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import SearchResultsView from './SearchResultsView';
-
-/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
- * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+import FilledButton from './Buttons/FilledButton';
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
 
 const SearchView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const {service, searchCriteria, update} = useContext(SearchContext);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const backgroundStyle = {
+    flex: 1,
+    marginHorizontal: 20,
+    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+  };
+
+  const groupBoxStyle = {
+    flex: 1,
+    padding: 20,
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    marginTop: 32,
+    borderRadius: 8,
+  };
+
+  const serviceFromIndex = () => {
+    switch (selectedIndex) {
+      case 0:
+        return 'flatly';
+      case 1:
+        return 'carly';
+      case 2:
+        return 'parkly';
+      default:
+        return null;
+    }
   };
 
   const searchButtonClicked = () => {
     // TODO: ¡Implement!
-    update('flatly', {
+    update(serviceFromIndex(), {
       location: '',
       dateFrom: date,
       dateTo: date,
@@ -71,71 +62,46 @@ const SearchView = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView style={[backgroundStyle, {marginHorizontal: 0}]}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <Button title="Open" onPress={() => setOpen(true)} />
-        <DatePicker
-          modal
-          open={open}
-          date={date}
-          onConfirm={date => {
-            setOpen(false);
-            setDate(date);
-          }}
-          onCancel={() => {
-            setOpen(false);
+      <KeyboardAwareScrollView style={backgroundStyle}>
+        <View style={{marginVertical: 15}} />
+        <SegmentedControl
+          values={['Flatly', 'Carly', 'Parkly']}
+          selectedIndex={selectedIndex}
+          onChange={event => {
+            setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
           }}
         />
-        <Button title="Search" onPress={searchButtonClicked} />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+        <View style={groupBoxStyle}>
+          <Button title="Open" onPress={() => setOpen(true)} />
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <FilledButton
+              title="Search"
+              icon="search"
+              onPress={searchButtonClicked}
+            />
+          </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
+      <DatePicker
+        modal
+        open={open}
+        date={date}
+        onConfirm={date => {
+          setOpen(false);
+          setDate(date);
+        }}
+        onCancel={() => {
+          setOpen(false);
+        }}
+      />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 const Stack = createNativeStackNavigator();
 const SearchNavigationView: () => Node = () => {
