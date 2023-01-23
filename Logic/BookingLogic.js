@@ -8,6 +8,7 @@ export type Booking = {
   dateFrom: number,
   dateTo: number,
   offerId: string,
+  service: string,
   // ...
 };
 

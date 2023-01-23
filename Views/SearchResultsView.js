@@ -145,6 +145,7 @@ const OffersView = () => {
                   dateFrom: searchCriteria.dateFrom,
                   dateTo: searchCriteria.dateTo,
                   offerId: selectedOffer ? selectedOffer.id : null,
+                  service: service,
                 },
                 update: () => {
                   // TODO: Figure out if we need to do something here…
