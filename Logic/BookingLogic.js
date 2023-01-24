@@ -72,7 +72,7 @@ export const cancelBooking = async (bookingId: string): Promise<boolean> => {
 
 export const createBooking = async (booking: Booking): Promise<Booking> => {
   // Make a PUT/POST request to /logic/api/bookings/{bookingId} endpoint
-  return await fetch(Config.booklyUrl + '/logic/api/bookings', {
+  return await fetch(Config.booklyUrl + '/logic/api/bookings?service=' + booking.service, {
     method: 'POST',
     mode: 'cors',
     cache: 'no-cache',
