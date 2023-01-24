@@ -4,7 +4,7 @@ import {
   Button,
   SafeAreaView,
   StatusBar,
-  Text,
+  Text, TextInput,
   useColorScheme,
   View,
 } from 'react-native';
@@ -15,12 +15,16 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import SearchResultsView from './SearchResultsView';
 import FilledButton from './Buttons/FilledButton';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
+import InlineButton from "./Buttons/InlineButton";
 
 const SearchView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const {service, searchCriteria, update} = useContext(SearchContext);
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
+  const [location, setLocation] = useState('');
+  const [dateFrom, setDateFrom] = useState(new Date());
+  const [dateTo, setDateTo] = useState(new Date());
+  const [openFrom, setOpenFrom] = useState(false);
+  const [openTo, setOpenTo] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const backgroundStyle = {
@@ -35,6 +39,32 @@ const SearchView = ({route, navigation}) => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     marginTop: 32,
     borderRadius: 8,
+  };
+
+  const inputLabelStyle = {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginVertical: 8,
+  };
+
+  const labelStyle = {
+    fontSize: 15,
+    fontWeight: '500',
+    color: isDarkMode ? Colors.white : Colors.black,
+  };
+
+  const roundedTextFieldStyle = {
+    width: 180,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    backgroundColor: isDarkMode ? Colors.dark : Colors.white,
+    borderRadius: 6,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: isDarkMode ? '#2a2a2a' : Colors.light,
   };
 
   const serviceFromIndex = () => {
@@ -53,9 +83,9 @@ const SearchView = ({route, navigation}) => {
   const searchButtonClicked = () => {
     // TODO: ¡Implement!
     update(serviceFromIndex(), {
-      location: '',
-      dateFrom: date,
-      dateTo: date,
+      location: location,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
       // ...
     });
     navigation.navigate('Results');
@@ -77,8 +107,19 @@ const SearchView = ({route, navigation}) => {
           }}
         />
         <View style={groupBoxStyle}>
-          <Button title="Open" onPress={() => setOpen(true)} />
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={inputLabelStyle}>
+            <Text style={labelStyle}>Location</Text>
+            <TextInput style={roundedTextFieldStyle} placeholder="Warsaw" onChangeText={newText => setLocation(newText)} />
+          </View>
+          <View style={inputLabelStyle}>
+            <Text style={labelStyle}>Date From</Text>
+            <InlineButton title={dateFrom.toLocaleDateString()} onPress={() => setOpenFrom(true)} />
+          </View>
+          <View style={inputLabelStyle}>
+            <Text style={labelStyle}>Date To</Text>
+            <InlineButton title={dateTo.toLocaleDateString()} onPress={() => setOpenTo(true)} />
+          </View>
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 25}}>
             <FilledButton
               title="Search"
               icon="search"
@@ -89,14 +130,22 @@ const SearchView = ({route, navigation}) => {
       </KeyboardAwareScrollView>
       <DatePicker
         modal
-        open={open}
-        date={date}
+        open={openFrom || openTo}
+        date={openFrom ? dateFrom : dateTo}
+        minimumDate={openFrom ? new Date() : dateFrom}
+        mode={'date'}
         onConfirm={date => {
-          setOpen(false);
-          setDate(date);
+          if (openFrom) {
+            setDateFrom(date);
+          } else {
+            setDateTo(date);
+          }
+          setOpenFrom(false);
+          setOpenTo(false);
         }}
         onCancel={() => {
-          setOpen(false);
+          setOpenFrom(false);
+          setOpenTo(false);
         }}
       />
     </SafeAreaView>
