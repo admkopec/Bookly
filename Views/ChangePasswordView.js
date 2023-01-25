@@ -33,6 +33,7 @@ const ChangePasswordView = () => {
   };
 
   const textFieldContainer = {
+    color: isDarkMode ? Colors.white : Colors.black,
     borderTopWidth: 1,
     borderColor:
       Platform.OS === 'ios' ? PlatformColor('separatorColor') : '#d0d0d0',
@@ -40,7 +41,7 @@ const ChangePasswordView = () => {
     borderStyle: 'solid',
     paddingHorizontal: 10,
     paddingVertical: 9,
-    marginVertical: 8,
+    //marginVertical: 8,
   };
 
   const save = () => {
@@ -68,7 +69,7 @@ const ChangePasswordView = () => {
               onChangeText={newText => setPassword(newText)}
             />
           </View>
-          <View style={textFieldContainer}>
+          <View style={[textFieldContainer, {borderTopWidth: 0}]}>
             <TextInput
               style={{width: '100%'}}
               placeholder="Repeat Password"
@@ -93,6 +94,8 @@ const ChangePasswordNavigationView: () => Node = () => {
       <Stack.Screen
         name="Change Password"
         options={{
+          headerShadowVisible: true,
+          headerLargeTitleShadowVisible: false,
           headerRight: () => (
             <Button title="Cancel" onPress={() => dismiss()} />
           ),

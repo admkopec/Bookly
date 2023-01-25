@@ -147,12 +147,12 @@ const AccountView = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={tableViewStyle(isDarkMode)}>
+    <SafeAreaView style={[tableViewStyle(isDarkMode), {marginHorizontal: 0}]}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+      <ScrollView style={tableViewStyle(isDarkMode)} contentInsetAdjustmentBehavior="automatic">
         <UserCell />
         <Text style={sectionHeader}>settings</Text>
         <SettingCell

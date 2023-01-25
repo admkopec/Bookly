@@ -25,7 +25,7 @@ export const tableViewStyle = (isDarkMode: boolean) => {
   return {
     flex: 1,
     marginHorizontal: 20,
-    backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
-    //backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemGroupedBackgroundColor') : (isDarkMode ? Colors.black : Colors.lighter),
+    //backgroundColor: isDarkMode ? Colors.black : Colors.lighter,
+    backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemGroupedBackgroundColor') : (isDarkMode ? Colors.black : Colors.lighter),
   };
 };

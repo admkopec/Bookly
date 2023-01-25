@@ -11,6 +11,7 @@ import {
 import React, {useContext, useState} from 'react';
 import {updateUser, UserContext} from '../Logic/AccountLogic';
 import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
+import {Colors} from "react-native/Libraries/NewAppScreen";
 
 const NameEmailView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -32,12 +33,12 @@ const NameEmailView = ({route, navigation}) => {
   });
 
   return (
-    <SafeAreaView style={tableViewStyle(isDarkMode)}>
+    <SafeAreaView style={[tableViewStyle(isDarkMode), {marginHorizontal: 0}]}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+      <ScrollView style={tableViewStyle(isDarkMode)} contentInsetAdjustmentBehavior="automatic">
         <Text
           style={[
             sectionHeader,
@@ -49,7 +50,7 @@ const NameEmailView = ({route, navigation}) => {
         </Text>
         <View style={cellContainer(isDarkMode)}>
           <TextInput
-            style={{width: '100%'}}
+            style={{color: isDarkMode ? Colors.white : Colors.black, width: '100%'}}
             placeholder={'Name'}
             value={name}
             onChangeText={text => setName(text)}
@@ -66,7 +67,7 @@ const NameEmailView = ({route, navigation}) => {
         </Text>
         <View style={cellContainer(isDarkMode)}>
           <TextInput
-            style={{width: '100%'}}
+            style={{color: isDarkMode ? Colors.white : Colors.black, width: '100%'}}
             placeholder={'email@example.com'}
             value={email}
             onChangeText={text => setEmail(text)}

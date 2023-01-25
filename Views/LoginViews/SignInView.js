@@ -40,13 +40,14 @@ const SignInView = () => {
   };
 
   const textFieldContainer = {
+    color: isDarkMode ? Colors.white : Colors.black,
     borderTopWidth: 1,
     borderColor: Platform.OS === 'ios' ? PlatformColor('separatorColor') : '#d0d0d0',
     borderBottomWidth: 1,
     borderStyle: 'solid',
     paddingHorizontal: 10,
     paddingVertical: 9,
-    marginVertical: 8,
+    //marginVertical: 8,
   };
 
   const [email, setEmail] = useState('');
@@ -63,7 +64,7 @@ const SignInView = () => {
             onChangeText={newText => setEmail(newText)}
           />
           </View>
-          <View style={textFieldContainer}>
+          <View style={[textFieldContainer, {borderTopWidth: 0}]}>
           <TextInput
             placeholder="Password"
             secureTextEntry={true}
@@ -101,6 +102,8 @@ const SignInNavigationView: () => Node = () => {
       <Stack.Screen
         name="Sign In"
         options={{
+          headerShadowVisible: true,
+          headerLargeTitleShadowVisible: false,
           headerRight: () => (
             <Button title="Cancel" onPress={() => dismiss()} />
           ),

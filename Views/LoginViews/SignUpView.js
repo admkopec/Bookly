@@ -40,13 +40,14 @@ const SignUpView = () => {
   }
 
   const textFieldContainer = {
+    color: isDarkMode ? Colors.white : Colors.black,
     borderTopWidth: 1,
     borderColor: Platform.OS === 'ios' ? PlatformColor('separatorColor') : '#d0d0d0',
     borderBottomWidth: 1,
     borderStyle: 'solid',
     paddingHorizontal: 10,
     paddingVertical: 9,
-    marginVertical: 8,
+    //marginVertical: 8,
   };
 
   const [name, setName] = useState('');
@@ -62,13 +63,13 @@ const SignUpView = () => {
           <View style={textFieldContainer}>
           <TextInput placeholder="Name" onChangeText={newText => setName(newText)} />
           </View>
-          <View style={textFieldContainer}>
+          <View style={[textFieldContainer, {borderTopWidth: 0}]}>
           <TextInput placeholder="Email" onChangeText={newText => setEmail(newText)} />
           </View>
-          <View style={textFieldContainer}>
+          <View style={[textFieldContainer, {borderTopWidth: 0}]}>
           <TextInput placeholder="Password" secureTextEntry={true} onChangeText={newText => setPassword(newText)} />
           </View>
-          <View style={textFieldContainer}>
+          <View style={[textFieldContainer, {borderTopWidth: 0}]}>
           <TextInput placeholder="Repeat Password" secureTextEntry={true} onChangeText={newText => setRepeatPassword(newText)} />
           </View>
           <View style={{marginTop: 32, width: '100%', alignItems: 'center'}}>
@@ -108,6 +109,8 @@ const SignUpNavigationView: () => Node = () => {
       <Stack.Screen
         name="Sign Up"
         options={{
+          headerShadowVisible: true,
+          headerLargeTitleShadowVisible: false,
           headerRight: () => (
             <Button title="Cancel" onPress={() => dismiss()} />
           ),

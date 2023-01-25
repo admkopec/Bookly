@@ -43,12 +43,12 @@ const PasswordSecurityView = () => {
   const [isPresented, setIsPresented] = useState(false);
 
   return (
-    <SafeAreaView style={tableViewStyle(isDarkMode)}>
+    <SafeAreaView style={[tableViewStyle(isDarkMode), {marginHorizontal: 0}]}>
       <StatusBar
         barStyle={isDarkMode || isPresented ? 'light-content' : 'dark-content'}
         backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+      <ScrollView style={tableViewStyle(isDarkMode)} contentInsetAdjustmentBehavior="automatic">
         <ButtonCell
           title={'Change Password'}
           onPress={() => setIsPresented(true)}

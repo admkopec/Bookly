@@ -126,12 +126,13 @@ const BookingsView = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={tableViewStyle(isDarkMode)}>
+    <SafeAreaView style={[tableViewStyle(isDarkMode), {marginHorizontal: 0}]}>
       <StatusBar
         barStyle={isDarkMode || selectedBooking !== null ? 'light-content' : 'dark-content'}
         backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
       <SectionList
+        style={tableViewStyle(isDarkMode)}
         sections={sections}
         refreshing={isRefreshing}
         keyExtractor={(item, index) => index}

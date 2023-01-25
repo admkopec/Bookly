@@ -31,13 +31,13 @@ const BookingView = () => {
   const containerStyle = {
     flex: 1,
     marginHorizontal: 20,
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+    backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemBackgroundColor') : isDarkMode ? Colors.black : Colors.white,
   };
 
   const groupBoxStyle = {
     flex: 1,
     padding: 20,
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: Platform.OS === 'ios' ? PlatformColor('secondarySystemBackgroundColor') : isDarkMode ? Colors.darker : Colors.lighter,
     marginTop: 32,
     borderRadius: 8,
   };
@@ -95,6 +95,8 @@ const BookingNavigationView: () => Node = () => {
       <Stack.Screen
         name="Overview"
         options={{
+          //headerShadowVisible: true,
+          //headerLargeTitleShadowVisible: false,
           headerRight: () => (
             <Button title="Cancel" onPress={() => dismiss()} />
           ),
