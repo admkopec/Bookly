@@ -25,15 +25,32 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import NameEmailView from './NameEmailView';
 import PasswordSecurityView from './PasswordSecurityView';
 import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
+import MembershipView from "./MembershipView";
 
 const UserCell = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const {user, update} = useContext(UserContext);
   // TODO: Move font styling somewhere
-  const body = {
-    fontSize: 15,
+  const title = {
+    fontSize: 18,
+    fontWeight: '600',
     color: isDarkMode ? Colors.white : Colors.black,
   };
+  const subtitle = {
+    fontSize: 15,
+    marginLeft: 5,
+    color: Platform.OS === 'ios' ? PlatformColor('secondaryLabel') : '#a0a0a0',
+  };
+  const vStack = {
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+  };
+    const hStack = {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+    }
   // TODO: Add proper styling
   return (
     <View
@@ -46,7 +63,29 @@ const UserCell = () => {
         },
       ]}>
       {user ? (
-        <Text style={body}>{user.name}</Text>
+        <View style={hStack}>
+          <Icon style={{marginVertical: -12, marginHorizontal: -5}} name="person-circle" size={66} color={'#817878'} />
+          <View style={[vStack, {marginLeft: 15}]}>
+            <Text style={title}>{user.name}</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Icon
+                name="star"
+                size={16}
+                color={
+                  Platform.OS === 'ios'
+                    ? PlatformColor('secondaryLabel')
+                    : '#a0a0a0'
+                }
+              />
+              <Text style={subtitle}>Level {user.membershipLevel}</Text>
+            </View>
+          </View>
+        </View>
       ) : (
         <View
           style={{
@@ -152,7 +191,9 @@ const AccountView = ({route, navigation}) => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
-      <ScrollView style={tableViewStyle(isDarkMode)} contentInsetAdjustmentBehavior="automatic">
+      <ScrollView
+        style={tableViewStyle(isDarkMode)}
+        contentInsetAdjustmentBehavior="automatic">
         <UserCell />
         <Text style={sectionHeader}>settings</Text>
         <SettingCell
@@ -215,7 +256,7 @@ const AccountNavigationView: () => Node = () => {
         <Stack.Screen
           name="Membership"
           options={{headerTitle: 'Membership'}}
-          component={View}
+          component={MembershipView}
         />
       </Stack.Navigator>
     </UserContext.Provider>

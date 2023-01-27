@@ -7,6 +7,7 @@ export type User = {
   id: string,
   name: string,
   email: string,
+  membershipLevel: number,
 };
 
 export const AccountContext = React.createContext({
