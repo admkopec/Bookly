@@ -65,6 +65,9 @@ const ChangePasswordView = () => {
             <TextInput
               style={{width: '100%'}}
               placeholder="Password"
+              autoComplete="new-password"
+              textContentType="newPassword"
+              autoCapitalize="none"
               secureTextEntry={true}
               onChangeText={newText => setPassword(newText)}
             />
@@ -73,6 +76,9 @@ const ChangePasswordView = () => {
             <TextInput
               style={{width: '100%'}}
               placeholder="Repeat Password"
+              autoComplete="new-password"
+              textContentType="newPassword"
+              autoCapitalize="none"
               secureTextEntry={true}
               onChangeText={newText => setRepeatPassword(newText)}
             />

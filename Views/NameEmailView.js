@@ -53,6 +53,8 @@ const NameEmailView = ({route, navigation}) => {
             style={{color: isDarkMode ? Colors.white : Colors.black, width: '100%'}}
             placeholder={'Name'}
             value={name}
+            autoComplete="name"
+            textContentType="name"
             onChangeText={text => setName(text)}
           />
         </View>
@@ -70,6 +72,10 @@ const NameEmailView = ({route, navigation}) => {
             style={{color: isDarkMode ? Colors.white : Colors.black, width: '100%'}}
             placeholder={'email@example.com'}
             value={email}
+            autoComplete="email"
+            keyboardType="email-address"
+            textContentType="username"
+            autoCapitalize="none"
             onChangeText={text => setEmail(text)}
           />
         </View>

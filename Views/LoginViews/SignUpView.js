@@ -61,16 +61,41 @@ const SignUpView = () => {
         <View style={backgroundStyle}>
           <Text style={titleText}>Bookly</Text>
           <View style={textFieldContainer}>
-          <TextInput placeholder="Name" onChangeText={newText => setName(newText)} />
+          <TextInput
+              placeholder="Name"
+              autoComplete="name"
+              textContentType="name"
+              onChangeText={newText => setName(newText)} />
           </View>
           <View style={[textFieldContainer, {borderTopWidth: 0}]}>
-          <TextInput placeholder="Email" onChangeText={newText => setEmail(newText)} />
+          <TextInput
+              placeholder="Email"
+              autoComplete="email"
+              keyboardType="email-address"
+              textContentType="username"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={newText => setEmail(newText)} />
           </View>
           <View style={[textFieldContainer, {borderTopWidth: 0}]}>
-          <TextInput placeholder="Password" secureTextEntry={true} onChangeText={newText => setPassword(newText)} />
+          <TextInput
+              placeholder="Password"
+              autoComplete="new-password"
+              textContentType="newPassword"
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={newText => setPassword(newText)} />
           </View>
           <View style={[textFieldContainer, {borderTopWidth: 0}]}>
-          <TextInput placeholder="Repeat Password" secureTextEntry={true} onChangeText={newText => setRepeatPassword(newText)} />
+          <TextInput
+              placeholder="Repeat Password"
+              autoComplete="new-password"
+              textContentType="newPassword"
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={newText => setRepeatPassword(newText)} />
           </View>
           <View style={{marginTop: 32, width: '100%', alignItems: 'center'}}>
           <FilledButton

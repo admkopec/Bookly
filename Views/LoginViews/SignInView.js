@@ -61,12 +61,21 @@ const SignInView = () => {
           <View style={textFieldContainer}>
           <TextInput
             placeholder="Email"
+            autoComplete="username"
+            textContentType="username"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            autoCorrect={false}
             onChangeText={newText => setEmail(newText)}
           />
           </View>
           <View style={[textFieldContainer, {borderTopWidth: 0}]}>
           <TextInput
             placeholder="Password"
+            autoComplete="password"
+            textContentType="password"
+            autoCapitalize="none"
+            autoCorrect={false}
             secureTextEntry={true}
             onChangeText={newText => setPassword(newText)}
           />
