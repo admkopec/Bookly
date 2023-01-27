@@ -31,7 +31,7 @@ const SignInView = () => {
   };
 
   const titleText = {
-    fontSize: 32,
+    fontSize: 42,
     textAlign: 'center',
     fontWeight: '600',
     marginTop: 92,

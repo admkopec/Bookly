@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Button,
+  Button, Image,
   Modal, Platform, PlatformColor,
   SafeAreaView,
   StatusBar,
@@ -36,7 +36,7 @@ const SelectionView = () => {
     fontSize: 32,
     textAlign: 'center',
     fontWeight: '600',
-    marginTop: 92,
+    marginTop: 32,
     marginBottom: 62,
     color: isDarkMode ? Colors.white: Colors.black,
   };
@@ -52,10 +52,8 @@ const SelectionView = () => {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <View style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+        <View style={[containerStyle, backgroundStyle]}>
+          <Image source={require('../../Images/Icon.png')} style={{width: 210, height: 210}}/>
           <Text style={titleText}>Bookly</Text>
           <FilledButton title="Sign In" onPress={() => setSignInSelected(true)} />
           <View style={{marginVertical: 15}} />
