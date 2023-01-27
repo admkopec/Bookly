@@ -15,6 +15,8 @@
 		3BD376D22980A354008888A3 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3BD376D12980A354008888A3 /* Settings.bundle */; };
 		7699B88040F8A987B510C191 /* libPods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		EC8B5E1BE858C6FE459C373D /* Pods-Tuesday_BooklyApp-metadata.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8BE675104E7BBE326B0D455 /* Pods-Tuesday_BooklyApp-metadata.plist */; };
+		FB57B1A0EEB0615A2CAE6F2F /* Pods-Tuesday_BooklyApp-settings-metadata.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D72605B62736679DF9031D6 /* Pods-Tuesday_BooklyApp-settings-metadata.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,9 +44,11 @@
 		3BD376D12980A354008888A3 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Tuesday_BooklyApp/Settings.bundle; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Tuesday_BooklyApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tuesday_BooklyApp.release.xcconfig"; path = "Target Support Files/Pods-Tuesday_BooklyApp/Pods-Tuesday_BooklyApp.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.debug.xcconfig"; path = "Target Support Files/Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests/Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5D72605B62736679DF9031D6 /* Pods-Tuesday_BooklyApp-settings-metadata.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "Pods-Tuesday_BooklyApp-settings-metadata.plist"; path = "../Tuesday_BooklyApp/Settings.bundle/Pods-Tuesday_BooklyApp-settings-metadata.plist"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Tuesday_BooklyApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tuesday_BooklyApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Tuesday_BooklyApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.release.xcconfig"; path = "Target Support Files/Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests/Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		D8BE675104E7BBE326B0D455 /* Pods-Tuesday_BooklyApp-metadata.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Tuesday_BooklyApp-metadata.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -147,6 +151,8 @@
 				5709B34CF0A7D63546082F79 /* Pods-Tuesday_BooklyApp.release.xcconfig */,
 				5B7EB9410499542E8C5724F5 /* Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.debug.xcconfig */,
 				89C6BE57DB24E9ADA2F236DE /* Pods-Tuesday_BooklyApp-Tuesday_BooklyAppTests.release.xcconfig */,
+				D8BE675104E7BBE326B0D455 /* Pods-Tuesday_BooklyApp-metadata.plist */,
+				5D72605B62736679DF9031D6 /* Pods-Tuesday_BooklyApp-settings-metadata.plist */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -248,6 +254,8 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				3BD376D22980A354008888A3 /* Settings.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				EC8B5E1BE858C6FE459C373D /* Pods-Tuesday_BooklyApp-metadata.plist in Resources */,
+				FB57B1A0EEB0615A2CAE6F2F /* Pods-Tuesday_BooklyApp-settings-metadata.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

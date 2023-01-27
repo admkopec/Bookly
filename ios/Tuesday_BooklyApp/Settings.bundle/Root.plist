@@ -6,6 +6,14 @@
 	<string>Root</string>
 	<key>PreferenceSpecifiers</key>
 	<array>
+	    <dict>
+    		<key>Type</key>
+    		<string>PSChildPaneSpecifier</string>
+    		<key>Title</key>
+    		<string>Acknowledgements</string>
+    		<key>File</key>
+    		<string>Pods-Tuesday_BooklyApp-settings-metadata</string>
+    	</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
