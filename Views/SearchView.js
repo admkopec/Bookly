@@ -16,6 +16,7 @@ import SearchResultsView from './SearchResultsView';
 import FilledButton from './Buttons/FilledButton';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import InlineButton from './Buttons/InlineButton';
+import StepperButton from "./Buttons/StepperButton";
 
 const inputLabelStyle = {
   flex: 1,
@@ -64,10 +65,12 @@ const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
               <View style={inputLabelStyle}>
                 <Text style={labelStyle(isDarkMode)}>Adults</Text>
                 {/* TODO: Add a Stepper */}
+                <StepperButton value={numAdults} onValueChanged={setNumAdults} minValue={0} />
               </View>
               <View style={inputLabelStyle}>
                 <Text style={labelStyle(isDarkMode)}>Kids</Text>
                 {/* TODO: Add a Stepper */}
+                <StepperButton value={numKids} onValueChanged={setNumKids} minValue={0} />
               </View>
             </View>
           </View>
@@ -85,6 +88,7 @@ const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
         <View style={inputLabelStyle}>
           <Text style={labelStyle(isDarkMode)}>Spots</Text>
           {/* TODO: Add a Stepper */}
+          <StepperButton value={numSpots} onValueChanged={setNumSpots} minValue={0} />
         </View>
       );
     default:
@@ -99,9 +103,9 @@ const SearchView = ({route, navigation}) => {
   const [dateFrom, setDateFrom] = useState(new Date());
   const [dateTo, setDateTo] = useState(new Date());
   const [carType, setCarType] = useState();
-  const [numSpots, setNumSpots] = useState();
-  const [numAdults, setNumAdults] = useState();
-  const [numKids, setNumKids] = useState();
+  const [numSpots, setNumSpots] = useState(0);
+  const [numAdults, setNumAdults] = useState(0);
+  const [numKids, setNumKids] = useState(0);
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);

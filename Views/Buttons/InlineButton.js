@@ -4,18 +4,12 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const InlineButton = ({
-                          title,
-                          color = Platform.OS === 'ios' ? PlatformColor('systemFill') : '#a0a0a0',
-                          width,
-                          icon,
-                          onPress,
-                      }) => {
+const InlineButton = ({title, color = Platform.OS === 'ios' ? PlatformColor('systemFill') : '#a0a0a0', width, icon, onPress}) => {
     const isDarkMode = useColorScheme() === 'dark';
     const fontStyle = {
         fontSize: 15,
         textAlign: 'center',
-        color: isDarkMode ? Colors.white : Colors.black,
+        color: Platform.OS === 'ios' ? PlatformColor('link') : '#0050ff',
     };
 
     const buttonStyle = {
