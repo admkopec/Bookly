@@ -74,7 +74,7 @@ export const register = (name: string, email: string, password: string) => {
     }),
   })
     .then(e => {
-      if (e.status !== 200) {
+      if (e.status !== 201 && e.status !== 200) {
         throw Error('Server Error');
       }
       return e;
