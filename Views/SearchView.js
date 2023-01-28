@@ -15,7 +15,82 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import SearchResultsView from './SearchResultsView';
 import FilledButton from './Buttons/FilledButton';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import InlineButton from "./Buttons/InlineButton";
+import InlineButton from './Buttons/InlineButton';
+
+const inputLabelStyle = {
+  flex: 1,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginHorizontal: 10,
+  marginVertical: 8,
+};
+
+const labelStyle = isDarkMode => {
+  return {
+    fontSize: 15,
+    fontWeight: '500',
+    color: isDarkMode ? Colors.white : Colors.black,
+  };
+};
+
+
+const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const [carType, setCarType] = carlyState;
+  const [numSpots, setNumSpots] = parklyState;
+  const [numAdults, setNumAdults, numKids, setNumKids] = flatlyState;
+
+  const secondaryGroupBoxStyle = {
+    flex: 1,
+    padding: 12,
+    backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemFill') : isDarkMode ? Colors.dark : '#909090',
+    marginVertical: 10,
+    borderRadius: 8,
+  };
+
+  const vStack = {
+    flex: 1,
+    justifyContent: 'flex-end',
+  };
+
+  switch (service) {
+    case 'flatly':
+      return (
+        <View style={secondaryGroupBoxStyle}>
+          <View style={[inputLabelStyle, {marginVertical: 0}]}>
+            <Text style={[labelStyle(isDarkMode), {marginRight: 35}]}>Guests</Text>
+            <View style={vStack}>
+              <View style={inputLabelStyle}>
+                <Text style={labelStyle(isDarkMode)}>Adults</Text>
+                {/* TODO: Add a Stepper */}
+              </View>
+              <View style={inputLabelStyle}>
+                <Text style={labelStyle(isDarkMode)}>Kids</Text>
+                {/* TODO: Add a Stepper */}
+              </View>
+            </View>
+          </View>
+        </View>
+      );
+    case 'carly':
+      return (
+        <View style={inputLabelStyle}>
+          <Text style={labelStyle(isDarkMode)}>Type</Text>
+          {/* TODO: Add a Picker */}
+        </View>
+      );
+    case 'parkly':
+      return (
+        <View style={inputLabelStyle}>
+          <Text style={labelStyle(isDarkMode)}>Spots</Text>
+          {/* TODO: Add a Stepper */}
+        </View>
+      );
+    default:
+      return null;
+  }
+};
 
 const SearchView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,6 +98,10 @@ const SearchView = ({route, navigation}) => {
   const [location, setLocation] = useState('');
   const [dateFrom, setDateFrom] = useState(new Date());
   const [dateTo, setDateTo] = useState(new Date());
+  const [carType, setCarType] = useState();
+  const [numSpots, setNumSpots] = useState();
+  const [numAdults, setNumAdults] = useState();
+  const [numKids, setNumKids] = useState();
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -39,29 +118,6 @@ const SearchView = ({route, navigation}) => {
     backgroundColor: Platform.OS === 'ios' ? PlatformColor('secondarySystemBackgroundColor') : isDarkMode ? Colors.darker : Colors.lighter,
     marginTop: 32,
     borderRadius: 8,
-  };
-
-  const secondaryGroupBoxStyle = {
-    flex: 1,
-    padding: 12,
-    backgroundColor: Platform.OS === 'ios' ? PlatformColor('tertiarySystemBackgroundColor') : isDarkMode ? Colors.dark : '#909090',
-    marginVertical: 10,
-    borderRadius: 8,
-  };
-
-  const inputLabelStyle = {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: 10,
-    marginVertical: 8,
-  };
-
-  const labelStyle = {
-    fontSize: 15,
-    fontWeight: '500',
-    color: isDarkMode ? Colors.white : Colors.black,
   };
 
   const roundedTextFieldStyle = {
@@ -101,12 +157,10 @@ const SearchView = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={[backgroundStyle, {marginHorizontal: 0}]}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+                 backgroundColor={backgroundStyle.backgroundColor} />
       <KeyboardAwareScrollView style={backgroundStyle}>
-        <View style={{marginVertical: 15}} />
+        <View style={{marginVertical: 10}} />
         <SegmentedControl
           values={['Flatly', 'Carly', 'Parkly']}
           selectedIndex={selectedIndex}
@@ -116,23 +170,23 @@ const SearchView = ({route, navigation}) => {
         />
         <View style={groupBoxStyle}>
           <View style={inputLabelStyle}>
-            <Text style={labelStyle}>Location</Text>
+            <Text style={labelStyle(isDarkMode)}>Location</Text>
             <TextInput style={roundedTextFieldStyle} placeholder="Warsaw" onChangeText={newText => setLocation(newText)} />
           </View>
           <View style={inputLabelStyle}>
-            <Text style={labelStyle}>Date From</Text>
+            <Text style={labelStyle(isDarkMode)}>Date From</Text>
             <InlineButton title={dateFrom.toLocaleDateString()} onPress={() => setOpenFrom(true)} />
           </View>
           <View style={inputLabelStyle}>
-            <Text style={labelStyle}>Date To</Text>
+            <Text style={labelStyle(isDarkMode)}>Date To</Text>
             <InlineButton title={dateTo.toLocaleDateString()} onPress={() => setOpenTo(true)} />
           </View>
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 25}}>
-            <FilledButton
-              title="Search"
-              icon="search"
-              onPress={searchButtonClicked}
-            />
+          <AdditionalOptions service={serviceFromIndex()}
+                             carlyState={[carType, setCarType]}
+                             parklyState={[numSpots, setNumSpots]}
+                             flatlyState={[numAdults, setNumAdults, numKids, setNumKids]} />
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
+            <FilledButton title="Search" icon="search" onPress={searchButtonClicked} />
           </View>
         </View>
       </KeyboardAwareScrollView>
