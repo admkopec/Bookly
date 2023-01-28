@@ -25,7 +25,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import NameEmailView from './NameEmailView';
 import PasswordSecurityView from './PasswordSecurityView';
 import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
-import MembershipView from "./MembershipView";
+import MembershipView from './MembershipView';
 
 const UserCell = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -42,15 +42,15 @@ const UserCell = () => {
     color: Platform.OS === 'ios' ? PlatformColor('secondaryLabel') : '#a0a0a0',
   };
   const vStack = {
-      flex: 1,
-      flexDirection: 'column',
-      alignItems: 'flex-start',
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   };
-    const hStack = {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-    }
+  const hStack = {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  };
   // TODO: Add proper styling
   return (
     <View
@@ -64,7 +64,12 @@ const UserCell = () => {
       ]}>
       {user ? (
         <View style={hStack}>
-          <Icon style={{marginVertical: -12, marginHorizontal: -5}} name="person-circle" size={66} color={'#817878'} />
+          <Icon
+            style={{marginVertical: -12, marginHorizontal: -5}}
+            name="person-circle"
+            size={66}
+            color={'#817878'}
+          />
           <View style={[vStack, {marginLeft: 15}]}>
             <Text style={title}>{user.name}</Text>
             <View
@@ -230,7 +235,12 @@ const AccountNavigationView: () => Node = () => {
     setUser(user);
     fetchUser()
       .then(e => setUser(e))
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error);
+        if (error.message === 'Unauthorized') {
+          update();
+        }
+      });
   };
   useEffect(() => {
     update();

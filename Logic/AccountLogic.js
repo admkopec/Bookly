@@ -102,7 +102,7 @@ export const fetchUser = async (): Promise<User> => {
   }).then(e => {
     if (e.status !== 200) {
       logout();
-      throw Error();
+      throw Error('Unauthorized');
     } else {
       return e.json();
     }
