@@ -122,6 +122,7 @@ const SearchView = ({route, navigation}) => {
 
   const roundedTextFieldStyle = {
     width: 180,
+    fontSize: 15,
     paddingVertical: 5,
     paddingHorizontal: 8,
     backgroundColor: isDarkMode ? Colors.dark : Colors.white,

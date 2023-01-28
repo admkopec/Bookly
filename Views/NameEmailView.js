@@ -19,6 +19,11 @@ const NameEmailView = ({route, navigation}) => {
   const [name, setName] = useState(user ? user.name : '');
   const [email, setEmail] = useState(user ? user.email : '');
 
+  const textFieldStyle = {
+    fontSize: 15,
+    color: isDarkMode ? Colors.white : Colors.black, width: '100%',
+  };
+
   const saveClicked = () => {
     updateUser(name, email, null)
       .then(e => {
@@ -50,7 +55,7 @@ const NameEmailView = ({route, navigation}) => {
         </Text>
         <View style={cellContainer(isDarkMode)}>
           <TextInput
-            style={{color: isDarkMode ? Colors.white : Colors.black, width: '100%'}}
+            style={textFieldStyle}
             placeholder={'Name'}
             value={name}
             autoComplete="name"
@@ -69,7 +74,7 @@ const NameEmailView = ({route, navigation}) => {
         </Text>
         <View style={cellContainer(isDarkMode)}>
           <TextInput
-            style={{color: isDarkMode ? Colors.white : Colors.black, width: '100%'}}
+            style={textFieldStyle}
             placeholder={'email@example.com'}
             value={email}
             autoComplete="email"
