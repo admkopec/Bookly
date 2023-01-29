@@ -71,7 +71,7 @@ const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
               <View style={[inputLabelStyle, {marginRight: 0}]}>
                 <Text style={labelStyle(isDarkMode)}>Adults</Text>
                 {/* TODO: Add a Stepper */}
-                <StepperButton value={numAdults} onValueChanged={setNumAdults} minValue={0} />
+                <StepperButton value={numAdults} onValueChanged={setNumAdults} minValue={1} />
               </View>
               <View style={[inputLabelStyle, {marginRight: 0}]}>
                 <Text style={labelStyle(isDarkMode)}>Kids</Text>
@@ -101,7 +101,7 @@ const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
         <View style={inputLabelStyle}>
           <Text style={labelStyle(isDarkMode)}>Spots</Text>
           {/* TODO: Add a Stepper */}
-          <StepperButton value={numSpots} onValueChanged={setNumSpots} minValue={0} />
+          <StepperButton value={numSpots} onValueChanged={setNumSpots} minValue={1} />
         </View>
       );
     default:
@@ -116,8 +116,8 @@ const SearchView = ({route, navigation}) => {
   const [dateFrom, setDateFrom] = useState(getTomorrow());
   const [dateTo, setDateTo] = useState(getTomorrow());
   const [carType, setCarType] = useState('hatchback');
-  const [numSpots, setNumSpots] = useState(0);
-  const [numAdults, setNumAdults] = useState(0);
+  const [numSpots, setNumSpots] = useState(1);
+  const [numAdults, setNumAdults] = useState(1);
   const [numKids, setNumKids] = useState(0);
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);

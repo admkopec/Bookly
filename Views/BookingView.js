@@ -106,14 +106,14 @@ const BookingView = () => {
                           : '#f00'
                       }
                       onPress={() =>
-                        cancelBooking(booking.id).then(() => update())
+                        cancelBooking(booking.id).then(() => update()).catch(error => console.log(error))
                       }
                     />
                   ) : (
                     <FilledButton
                       title={'Book'}
                       onPress={() =>
-                        createBooking(booking).then(() => dismiss())
+                        createBooking(booking).then(() => dismiss()).catch(error => console.log(error))
                       }
                     />
                   )}
