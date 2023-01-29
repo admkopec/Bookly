@@ -30,14 +30,15 @@ const BookingItem: ({booking: Booking, onPress: () => void}) => Node = ({booking
   // TODO: ¡Implement!
   return (
     <TouchableOpacity style={cellContainer(isDarkMode)} onPress={onPress}>
-      <Text>{booking}</Text>
+      <Text>{booking.name}</Text>
     </TouchableOpacity>
   );
 };
 
 const BookingsView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
-  const [isRefreshing, setIsRefreshing] = useState(true);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [endReached, setEndReached] = useState(endReached);
@@ -86,10 +87,12 @@ const BookingsView = ({route, navigation}) => {
         setSections(sectionsDraft);
         setIsMoreLoading(false);
         setIsRefreshing(false);
+        setIsInitialRender(false);
       })
       .catch(error => {
         setIsMoreLoading(false);
         setIsRefreshing(false);
+        setIsInitialRender(false);
         console.error(error);
       });
   };
@@ -146,7 +149,7 @@ const BookingsView = ({route, navigation}) => {
           <SectionHeader title={title} />
         )}
         renderSectionFooter={({section: {title}}) => renderFooter(title)}
-        ListEmptyComponent={<NoItemsCell text={"You haven't made any Bookings yet!"} />}
+        ListEmptyComponent={<NoItemsCell text={"You haven't made any Bookings yet!"} isInitialRender={isInitialRender} />}
         onEndReachedThreshold={0.2}
         onEndReached={() => {
           if (!endReached) {

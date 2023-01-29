@@ -21,7 +21,7 @@ import {BookingContext} from "../Logic/BookingLogic";
 import BookingView from "./BookingView";
 
 const SectionHeader: ({title: string}) => Node = ({title}) => {
-  return <Text style={sectionHeader}>{title}</Text>;
+  return <Text style={[sectionHeader, {marginTop: 22}]}>{title}</Text>;
 };
 
 const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({offer, onPress}) => {
@@ -29,7 +29,7 @@ const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({offer, onPres
   // TODO: ¡Implement!
   return (
     <TouchableOpacity style={cellContainer(isDarkMode)} onPress={onPress}>
-      <Text>{offer}</Text>
+      <Text>{offer.name}</Text>
     </TouchableOpacity>
   );
 };
@@ -37,7 +37,8 @@ const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({offer, onPres
 const OffersView = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const {service, searchCriteria} = useContext(SearchContext);
-  const [isRefreshing, setIsRefreshing] = useState(true);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [endReached, setEndReached] = useState(endReached);
@@ -54,8 +55,8 @@ const OffersView = () => {
           setEndReached(true);
         } else {
           if (page === 1) {
-            sectionsDraft[0] = {title: 'recommended', data: offers[0]};
-            sectionsDraft[1] = {title: '', data: offers.splice(1, -1)};
+            sectionsDraft[0] = {title: 'recommended', data: [offers[0]]};
+            sectionsDraft[1] = {title: '', data: offers.slice(1, -1)};
           } else {
             if (sectionsDraft.length > 1) {
               sectionsDraft[1].data = [...sectionsDraft[1].data, ...offers];
@@ -65,10 +66,12 @@ const OffersView = () => {
         setSections(sectionsDraft);
         setIsMoreLoading(false);
         setIsRefreshing(false);
+        setIsInitialRender(false);
       })
       .catch(error => {
         setIsMoreLoading(false);
         setIsRefreshing(false);
+        setIsInitialRender(false);
         console.error(error);
       });
   };
@@ -93,7 +96,7 @@ const OffersView = () => {
         style={tableViewStyle(isDarkMode)}
         sections={sections}
         refreshing={isRefreshing}
-        keyExtractor={(item, index) => index}
+        keyExtractor={(item, index) => item.id}
         renderItem={({item}) => (
           <OfferItem offer={item} onPress={() => setSelectedOffer(item)} />
         )}
@@ -104,6 +107,7 @@ const OffersView = () => {
         ListEmptyComponent={
           <NoItemsCell
             text={"We couldn't find any offers matching the criteria!"}
+            isInitialRender={isInitialRender}
           />
         }
         onEndReachedThreshold={0.2}

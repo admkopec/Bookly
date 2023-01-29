@@ -67,16 +67,16 @@ const searchCriteriaToQuery = (searchCriteria: OfferSearchCriteria) => {
     let queryString = '?location=' + searchCriteria.location +
         '&dateFrom=' + Math.floor(searchCriteria.dateFrom.getTime() / 1000) +
         '&dateTo=' + Math.floor(searchCriteria.dateTo.getTime() / 1000);
-    if (searchCriteria.numberOfSpaces) {
+    if (searchCriteria.numberOfSpaces !== null) {
         queryString += '&numberOfSpaces=' + searchCriteria.numberOfSpaces;
     }
-    if (searchCriteria.numberOfAdults) {
+    if (searchCriteria.numberOfAdults !== null) {
         queryString += '&numberOfAdults=' + searchCriteria.numberOfAdults;
     }
-    if (searchCriteria.numberOfKids) {
+    if (searchCriteria.numberOfKids !== null) {
         queryString += '&numberOfKids=' + searchCriteria.numberOfKids;
     }
-    if (searchCriteria.carType) {
+    if (searchCriteria.carType !== null) {
         queryString += '&carType=' + searchCriteria.carType;
     }
     return queryString;

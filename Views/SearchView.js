@@ -17,6 +17,7 @@ import FilledButton from './Buttons/FilledButton';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import InlineButton from './Buttons/InlineButton';
 import StepperButton from "./Buttons/StepperButton";
+import {Picker} from '@react-native-picker/picker';
 
 const inputLabelStyle = {
   flex: 1,
@@ -62,12 +63,12 @@ const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
           <View style={[inputLabelStyle, {marginVertical: 0}]}>
             <Text style={[labelStyle(isDarkMode), {marginRight: 35}]}>Guests</Text>
             <View style={vStack}>
-              <View style={inputLabelStyle}>
+              <View style={[inputLabelStyle, {marginRight: 0}]}>
                 <Text style={labelStyle(isDarkMode)}>Adults</Text>
                 {/* TODO: Add a Stepper */}
                 <StepperButton value={numAdults} onValueChanged={setNumAdults} minValue={0} />
               </View>
-              <View style={inputLabelStyle}>
+              <View style={[inputLabelStyle, {marginRight: 0}]}>
                 <Text style={labelStyle(isDarkMode)}>Kids</Text>
                 {/* TODO: Add a Stepper */}
                 <StepperButton value={numKids} onValueChanged={setNumKids} minValue={0} />
@@ -102,7 +103,7 @@ const SearchView = ({route, navigation}) => {
   const [location, setLocation] = useState('');
   const [dateFrom, setDateFrom] = useState(new Date());
   const [dateTo, setDateTo] = useState(new Date());
-  const [carType, setCarType] = useState();
+  const [carType, setCarType] = useState('hatchback');
   const [numSpots, setNumSpots] = useState(0);
   const [numAdults, setNumAdults] = useState(0);
   const [numKids, setNumKids] = useState(0);
@@ -150,13 +151,19 @@ const SearchView = ({route, navigation}) => {
   };
 
   const searchButtonClicked = () => {
-    // TODO: ¡Implement!
-    update(serviceFromIndex(), {
+    const criteria = {
       location: location,
       dateFrom: dateFrom,
       dateTo: dateTo,
-      // ...
-    });
+      // Flatly
+      numberOfAdults: selectedIndex === 0 ? numAdults : null,
+      numberOfKids: selectedIndex === 0 ? numKids : null,
+      // Carly
+      carType: selectedIndex === 1 ? carType : null,
+      // Parkly
+      numberOfSpaces: selectedIndex === 2 ? numSpots : null,
+    };
+    update(serviceFromIndex(), criteria);
     navigation.navigate('Results');
   };
 

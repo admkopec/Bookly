@@ -1,11 +1,11 @@
 import React from 'react';
-import {Text, useColorScheme, View} from 'react-native';
+import {ActivityIndicator, Text, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {cellContainer} from './Styles';
 
-const NoItemsCell = ({text}) => {
+const NoItemsCell = ({text, isInitialRender = false}) => {
   const isDarkMode = useColorScheme() === 'dark';
-    // TODO: Move font styling somewhere
+  // TODO: Move font styling somewhere
   const title = {
     fontSize: 21,
     fontWeight: '700',
@@ -24,7 +24,11 @@ const NoItemsCell = ({text}) => {
           padding: 20,
         },
       ]}>
-      <Text style={title}>{text}</Text>
+      {isInitialRender ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={title}>{text}</Text>
+      )}
     </View>
   );
 };
