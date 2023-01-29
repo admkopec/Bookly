@@ -79,6 +79,7 @@ export const createBooking = async (booking: Booking): Promise<Booking> => {
     credentials: 'same-origin',
     headers: {
       Authorization: 'Bearer ' + (await getToken()),
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(booking),
   }).then(e => {

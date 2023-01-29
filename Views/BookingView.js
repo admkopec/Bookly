@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  Button,
+  Button, Image,
   Platform,
   PlatformColor,
   SafeAreaView,
@@ -31,15 +31,44 @@ const BookingView = () => {
   const containerStyle = {
     flex: 1,
     marginHorizontal: 20,
-    backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemBackgroundColor') : isDarkMode ? Colors.black : Colors.white,
+    backgroundColor:
+      Platform.OS === 'ios'
+        ? PlatformColor('systemBackgroundColor')
+        : isDarkMode
+        ? Colors.black
+        : Colors.white,
+  };
+
+  const imageStyle = {
+    margin: 0,
+    //minHeight: 220,
+    width: '100%',
   };
 
   const groupBoxStyle = {
-    flex: 1,
+    //flex: 1,
     padding: 20,
-    backgroundColor: Platform.OS === 'ios' ? PlatformColor('secondarySystemBackgroundColor') : isDarkMode ? Colors.darker : Colors.lighter,
-    marginTop: 32,
+    backgroundColor:
+      Platform.OS === 'ios'
+        ? PlatformColor('secondarySystemBackgroundColor')
+        : isDarkMode
+        ? Colors.darker
+        : Colors.lighter,
+    marginTop: 18,
     borderRadius: 8,
+  };
+
+  const buttonWrapper = {marginTop: 20, justifyContent: 'center', alignItems: 'center'};
+
+  const title = {
+    marginTop: 32,
+    fontSize: 22,
+    fontWeight: '600',
+    color: isDarkMode ? Colors.white : Colors.black,
+  };
+
+  const body = {
+    color: isDarkMode ? Colors.white : Colors.black,
   };
 
   useEffect(() => {
@@ -50,38 +79,48 @@ const BookingView = () => {
         setIsLoading(false);
       })
       .catch(error => console.error(error));
-  }, [booking]);
+  }, []);
 
   return (
     <SafeAreaView style={[containerStyle, {marginHorizontal: 0}]}>
       <View style={containerStyle}>
-        <View style={groupBoxStyle}>
-          {isLoading ? (
+        {isLoading ? (
+          <View style={[groupBoxStyle, {flex: 1, marginTop: 220}]}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
               <ActivityIndicator />
             </View>
-          ) : (
-            <View>
-              <Text>{booking.name}</Text>
-              <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                {booking.id !== null ? (
-                  <FilledButton
-                    title={'Cancel Booking'}
-                    color={
-                      Platform.OS === 'ios' ? PlatformColor('systemRed') : '#f00'
-                    }
-                    onPress={() => cancelBooking(booking.id).then(() => update())}
-                  />
-                ) : (
-                  <FilledButton
-                    title={'Book'}
-                    onPress={() => createBooking(booking).then(() => dismiss())}
-                  />
-                )}
-              </View>
+          </View>
+        ) : (
+          <View>
+            <Image style={imageStyle} source={offer.imageUrl} />
+            <Text style={title}>{booking.name}</Text>
+            <View style={groupBoxStyle}>
+                <Text style={body}>{offer.address}</Text>
+                <View style={buttonWrapper}>
+                  {booking.id !== null ? (
+                    <FilledButton
+                      title={'Cancel Booking'}
+                      color={
+                        Platform.OS === 'ios'
+                          ? PlatformColor('systemRed')
+                          : '#f00'
+                      }
+                      onPress={() =>
+                        cancelBooking(booking.id).then(() => update())
+                      }
+                    />
+                  ) : (
+                    <FilledButton
+                      title={'Book'}
+                      onPress={() =>
+                        createBooking(booking).then(() => dismiss())
+                      }
+                    />
+                  )}
+                </View>
             </View>
-          )}
-        </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );

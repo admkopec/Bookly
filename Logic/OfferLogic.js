@@ -15,7 +15,10 @@ export type OfferSearchCriteria = {
 
 export type Offer = {
     id: string,
-    // ...
+    name: string,
+    imageUrl: string,
+    address: string,
+    pricePerDay: number,
 };
 
 export const fetchOffer = async (offerId: string, service: string): Promise<Offer> => {

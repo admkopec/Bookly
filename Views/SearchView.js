@@ -36,6 +36,11 @@ const labelStyle = isDarkMode => {
   };
 };
 
+const getTomorrow = () => {
+  let today = new Date();
+  today.setDate(today.getDate() + 1);
+  return today;
+}
 
 const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -82,6 +87,13 @@ const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
         <View style={inputLabelStyle}>
           <Text style={labelStyle(isDarkMode)}>Type</Text>
           {/* TODO: Add a Picker */}
+          <Picker
+              selectedValue={carType}
+              onValueChange={(itemValue, itemIndex) => setCarType(itemValue)}>
+            <Picker.Item label="Hatchback" value="hatchback" />
+            <Picker.Item label="Cabrio" value="cabrio" />
+            <Picker.Item label="SUV" value="suv" />
+          </Picker>
         </View>
       );
     case 'parkly':
@@ -101,8 +113,8 @@ const SearchView = ({route, navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const {service, searchCriteria, update} = useContext(SearchContext);
   const [location, setLocation] = useState('');
-  const [dateFrom, setDateFrom] = useState(new Date());
-  const [dateTo, setDateTo] = useState(new Date());
+  const [dateFrom, setDateFrom] = useState(getTomorrow());
+  const [dateTo, setDateTo] = useState(getTomorrow());
   const [carType, setCarType] = useState('hatchback');
   const [numSpots, setNumSpots] = useState(0);
   const [numAdults, setNumAdults] = useState(0);
@@ -206,7 +218,7 @@ const SearchView = ({route, navigation}) => {
         modal
         open={openFrom || openTo}
         date={openFrom ? dateFrom : dateTo}
-        minimumDate={openFrom ? new Date() : dateFrom}
+        minimumDate={openFrom ? getTomorrow() : dateFrom}
         mode={'date'}
         onConfirm={date => {
           if (openFrom) {

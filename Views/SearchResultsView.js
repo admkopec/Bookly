@@ -1,15 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
-  Modal,
-  SafeAreaView,
-  SectionList,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  useColorScheme,
-  View,
+    ActivityIndicator, Image,
+    Modal, Platform, PlatformColor,
+    SafeAreaView,
+    SectionList,
+    StatusBar,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    useColorScheme,
+    View,
 } from 'react-native';
 import PresentationContext from '../Logic/PresentationContext';
 import {fetchOffers} from '../Logic/OfferLogic';
@@ -19,6 +19,7 @@ import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
 import {SearchContext} from "./SearchView";
 import {BookingContext} from "../Logic/BookingLogic";
 import BookingView from "./BookingView";
+import {Colors} from "react-native/Libraries/NewAppScreen";
 
 const SectionHeader: ({title: string}) => Node = ({title}) => {
   return <Text style={[sectionHeader, {marginTop: 22}]}>{title}</Text>;
@@ -26,10 +27,39 @@ const SectionHeader: ({title: string}) => Node = ({title}) => {
 
 const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({offer, onPress}) => {
   const isDarkMode = useColorScheme() === 'dark';
-  // TODO: ¡Implement!
-  return (
+    const vStack = {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+    };
+    const hStack = {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+    };
+    const title = {
+        fontSize: 15,
+        fontWeight: '600',
+        color: isDarkMode ? Colors.white : Colors.black,
+    };
+    const subtitle = {
+        fontSize: 13,
+        color: Platform.OS === 'ios' ? PlatformColor('secondaryLabel') : '#a0a0a0',
+    };
+    const imageStyle = {
+      height: 40,
+      width: 40,
+      marginRight: 10,
+    }
+    return (
     <TouchableOpacity style={cellContainer(isDarkMode)} onPress={onPress}>
-      <Text>{offer.name}</Text>
+        <View style={hStack}>
+        <Image style={imageStyle} source={offer.imageUrl ?? require('../Images/Icon.png')} />
+            <View style={vStack}>
+            <Text style={title}>{offer.name}</Text>
+            <Text style={subtitle}>{offer.address}</Text>
+            </View>
+        </View>
     </TouchableOpacity>
   );
 };
@@ -51,12 +81,12 @@ const OffersView = () => {
       .then(offers => {
         // TODO: Support some additional sorting
         let sectionsDraft = isRefreshing ? [] : sections;
-        if (offers.length === 0) {
+        if (offers.length === 0 || offers.length < 30) {
           setEndReached(true);
         } else {
           if (page === 1) {
             sectionsDraft[0] = {title: 'recommended', data: [offers[0]]};
-            sectionsDraft[1] = {title: '', data: offers.slice(1, -1)};
+            sectionsDraft[1] = {title: '', data: offers.slice(1)};
           } else {
             if (sectionsDraft.length > 1) {
               sectionsDraft[1].data = [...sectionsDraft[1].data, ...offers];
@@ -89,7 +119,7 @@ const OffersView = () => {
   return (
     <SafeAreaView style={[tableViewStyle(isDarkMode), {marginHorizontal: 0}]}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        barStyle={(isDarkMode || selectedOffer !== null) ? 'light-content' : 'dark-content'}
         backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
       <SectionList
@@ -147,10 +177,11 @@ const OffersView = () => {
                 booking: {
                   id: null,
                   name: selectedOffer ? selectedOffer.name : null,
-                  dateFrom: searchCriteria.dateFrom,
-                  dateTo: searchCriteria.dateTo,
+                  dateFrom: Math.round(searchCriteria.dateFrom.getTime() / 1000),
+                  dateTo: Math.round(searchCriteria.dateTo.getTime() / 1000),
                   offerId: selectedOffer ? selectedOffer.id : null,
                   service: service,
+                  numberOfSpaces: searchCriteria.numberOfSpaces,
                 },
                 update: () => {
                   // TODO: Figure out if we need to do something here…

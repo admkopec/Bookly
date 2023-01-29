@@ -81,7 +81,7 @@ const BookingsView = ({route, navigation}) => {
             }
           }
         }
-        if (bookings.length === 0) {
+        if (bookings.length === 0 || bookings.length < 30) {
           setEndReached(true);
         }
         setSections(sectionsDraft);
