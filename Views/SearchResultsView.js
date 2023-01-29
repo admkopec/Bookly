@@ -57,7 +57,7 @@ const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({offer, onPres
         <Image style={imageStyle} source={offer.imageUrl ?? require('../Images/Icon.png')} />
             <View style={vStack}>
             <Text style={title}>{offer.name}</Text>
-            <Text style={subtitle}>{offer.address}</Text>
+            <Text style={subtitle}>{offer.description}</Text>
             </View>
         </View>
     </TouchableOpacity>
@@ -81,9 +81,10 @@ const OffersView = () => {
       .then(offers => {
         // TODO: Support some additional sorting
         let sectionsDraft = isRefreshing ? [] : sections;
-        if (offers.length === 0 || offers.length < 30) {
+        if (offers.length === 0) {
           setEndReached(true);
         } else {
+          if (offers.length < 30) { setEndReached(true); }
           if (page === 1) {
             sectionsDraft[0] = {title: 'recommended', data: [offers[0]]};
             sectionsDraft[1] = {title: '', data: offers.slice(1)};

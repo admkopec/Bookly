@@ -95,7 +95,7 @@ const BookingView = () => {
             <Image style={imageStyle} source={offer.imageUrl} />
             <Text style={title}>{booking.name}</Text>
             <View style={groupBoxStyle}>
-                <Text style={body}>{offer.address}</Text>
+                <Text style={body}>{offer.description}</Text>
                 <View style={buttonWrapper}>
                   {booking.id !== null ? (
                     <FilledButton

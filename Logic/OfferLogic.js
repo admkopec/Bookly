@@ -17,7 +17,7 @@ export type Offer = {
     id: string,
     name: string,
     imageUrl: string,
-    address: string,
+    description: string,
     pricePerDay: number,
 };
 
