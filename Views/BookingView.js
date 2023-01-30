@@ -4,7 +4,7 @@ import {
   Button, Image,
   Platform,
   PlatformColor,
-  SafeAreaView,
+  SafeAreaView, ScrollView,
   Text,
   useColorScheme,
   View,
@@ -41,7 +41,7 @@ const BookingView = () => {
 
   const imageStyle = {
     margin: 0,
-    //minHeight: 220,
+    height: 220,
     width: '100%',
   };
 
@@ -71,9 +71,33 @@ const BookingView = () => {
     color: isDarkMode ? Colors.white : Colors.black,
   };
 
+  const price = {
+    marginTop: 80,
+    marginBottom: 12,
+    fontSize: 18,
+    fontWeight: '600',
+    color: isDarkMode ? Colors.white : Colors.black,
+  };
+
+  const priceTotal = {
+    marginTop: 10,
+    marginBottom: -5,
+    fontSize: 10,
+    fontWeight: '600',
+    color: Platform.OS === 'ios' ? PlatformColor('secondaryLabel') : isDarkMode ? Colors.white : Colors.darker,
+  };
+
+  const calculateTotalPrice = () => {
+    let days = Math.ceil((booking.dateTo-booking.dateFrom) / 1000);
+    if (days <= 0) {
+      days = 1;
+    }
+    return offer.pricePerDay * days;
+  }
+
   useEffect(() => {
     // Fetch Offer based on offerId
-    fetchOffer(booking.offerId, booking.service)
+    fetchOffer(booking.offerId, booking.service.toLowerCase())
       .then(e => {
         setOffer(e);
         setIsLoading(false);
@@ -91,12 +115,20 @@ const BookingView = () => {
             </View>
           </View>
         ) : (
-          <View>
-            <Image style={imageStyle} source={offer.imageUrl} />
+          <ScrollView>
+            <Image style={imageStyle} source={offer.imageUrl ?? require('../Images/Icon.png')} />
             <Text style={title}>{booking.name}</Text>
             <View style={groupBoxStyle}>
                 <Text style={body}>{offer.description}</Text>
-                <View style={buttonWrapper}>
+              {booking.id  ?
+                  <>
+                    <View style={{marginTop: 10}}/>
+                    <Text style={[body, {fontWeight: '600'}]}>Dates:</Text>
+                    <Text style={body}>{new Date(booking.dateFrom).toLocaleDateString()} - {new Date(booking.dateTo).toLocaleDateString()}</Text>
+                  </>
+                  : <></>
+              }
+              <View style={buttonWrapper}>
                   {booking.id !== null ? (
                     <FilledButton
                       title={'Cancel Booking'}
@@ -110,16 +142,20 @@ const BookingView = () => {
                       }
                     />
                   ) : (
-                    <FilledButton
+                      <>
+                      <Text style={price}>{offer.pricePerDay} zł per day</Text>
+                        <FilledButton
                       title={'Book'}
                       onPress={() =>
                         createBooking(booking).then(() => dismiss()).catch(error => console.log(error))
                       }
                     />
+                        <Text style={priceTotal}>Total due {calculateTotalPrice()} zł</Text>
+                      </>
                   )}
                 </View>
             </View>
-          </View>
+          </ScrollView>
         )}
       </View>
     </SafeAreaView>

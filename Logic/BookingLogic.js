@@ -20,7 +20,7 @@ export const BookingContext = React.createContext({
 export const fetchBookings = async (page: number, searchQuery: string): Promise<[Booking]> => {
   // TODO: Implement additional paging parameters
   // Make a GET request to /logic/api/bookings endpoint
-  return await fetch(Config.booklyUrl + '/logic/api/bookings?page=' + page + (searchQuery.length > 0 ? ('&search=' + searchQuery) : ''), {
+  return await fetch(Config.booklyUrl + '/logic/api/bookings?page=' + page + (searchQuery.length > 0 ? ('&searchCriteria=' + searchQuery) : ''), {
     method: 'GET',
     mode: 'cors',
     cache: 'no-cache',
@@ -65,7 +65,7 @@ export const cancelBooking = async (bookingId: string): Promise<boolean> => {
     cache: 'no-cache',
     credentials: 'same-origin',
     headers: {
-      Authorization: 'Bearer ' + (await getToken()),
+      'Authorization': 'Bearer ' + (await getToken()),
     },
   }).then(e => e.status === 200);
 };

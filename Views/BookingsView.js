@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import type {Node} from 'react';
 import {
   ActivityIndicator,
-  Modal,
+  Modal, Platform, PlatformColor,
   SafeAreaView,
   SectionList,
   StatusBar,
@@ -20,17 +20,34 @@ import BookingView from './BookingView';
 import type {Booking} from '../Logic/BookingLogic';
 import NoItemsCell from './Cells/NoItemsCell';
 import {cellContainer, sectionHeader, tableViewStyle} from './Cells/Styles';
+import {Colors} from "react-native/Libraries/NewAppScreen";
 
 const SectionHeader: ({title: string}) => Node = ({title}) => {
-  return <Text style={sectionHeader}>{title}</Text>;
+  return <Text style={[sectionHeader, {marginTop: 22}]}>{title}</Text>;
 };
 
 const BookingItem: ({booking: Booking, onPress: () => void}) => Node = ({booking, onPress}) => {
   const isDarkMode = useColorScheme() === 'dark';
-  // TODO: ¡Implement!
+  const vStack = {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  };
+  const title = {
+    fontSize: 15,
+    fontWeight: '600',
+    color: isDarkMode ? Colors.white : Colors.black,
+  };
+  const subtitle = {
+    fontSize: 13,
+    color: Platform.OS === 'ios' ? PlatformColor('secondaryLabel') : '#a0a0a0',
+  };
   return (
     <TouchableOpacity style={cellContainer(isDarkMode)} onPress={onPress}>
-      <Text>{booking.name}</Text>
+      <View style={vStack}>
+        <Text style={title}>{booking.name}</Text>
+        <Text style={subtitle}>{new Date(booking.dateFrom).toLocaleDateString()} - {new Date(booking.dateTo).toLocaleDateString()}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -51,7 +68,7 @@ const BookingsView = ({route, navigation}) => {
     fetchBookings(page, searchText)
       .then(bookings => {
         // TODO: Support some additional sorting
-        let sectionsDraft = isRefreshing ? [] : sections;
+        let sectionsDraft = isMoreLoading ? sections : [];
         if (searchText.length > 0) {
           // Present search results
           // TODO: Make sure that searching will not preserve previous values when searchTextChanges
@@ -62,17 +79,17 @@ const BookingsView = ({route, navigation}) => {
           }
         } else {
           // Split bookings based on `dateFrom`
-          const upcoming = bookings.filter(e => e.dateFrom > Date());
-          const previous = bookings.filter(e => e.dateFrom < Date());
+          const upcoming = bookings.filter(e => e.dateFrom > (new Date().getTime()/1000));
+          const previous = bookings.filter(e => e.dateFrom < (new Date().getTime()/1000));
           if (upcoming.length > 0) {
-            if (sectionsDraft[0].title === 'upcoming') {
+            if (sectionsDraft[0] && sectionsDraft[0].title === 'upcoming') {
               sectionsDraft[0].data = [...sectionsDraft[0].data, ...upcoming];
             } else {
               sectionsDraft.push({title: 'upcoming', data: upcoming});
             }
           }
           if (previous.length > 0) {
-            if (sectionsDraft[0].title === 'previous') {
+            if (sectionsDraft[0] && sectionsDraft[0].title === 'previous') {
               sectionsDraft[0].data = [...sectionsDraft[0].data, ...previous];
             } else if (sectionsDraft[1].title === 'previous') {
               sectionsDraft[1].data = [...sectionsDraft[1].data, ...previous];
@@ -105,8 +122,8 @@ const BookingsView = ({route, navigation}) => {
     navigation.setOptions({
       headerSearchBarOptions: {
         onChangeText: e => {
-          setSearchText(e.nativeEvent.text);
           setIsRefreshing(true);
+          setSearchText(e.nativeEvent.text);
           update();
         },
       },
@@ -131,7 +148,7 @@ const BookingsView = ({route, navigation}) => {
   return (
     <SafeAreaView style={[tableViewStyle(isDarkMode), {marginHorizontal: 0}]}>
       <StatusBar
-        barStyle={isDarkMode || selectedBooking !== null ? 'light-content' : 'dark-content'}
+        barStyle={(isDarkMode || selectedBooking !== null) ? 'light-content' : 'dark-content'}
         backgroundColor={tableViewStyle(isDarkMode).backgroundColor}
       />
       <SectionList
