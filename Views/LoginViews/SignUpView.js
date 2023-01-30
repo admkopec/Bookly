@@ -30,6 +30,10 @@ const SignUpView = () => {
     backgroundColor: Platform.OS === 'ios' ? PlatformColor('systemBackgroundColor') : (isDarkMode ? Colors.darker : Colors.white),
   };
 
+  const textField = {
+    color: isDarkMode ? Colors.white : Colors.black,
+  };
+
   const titleText = {
     fontSize: 42,
     textAlign: 'center',
@@ -62,6 +66,7 @@ const SignUpView = () => {
           <Text style={titleText}>Bookly</Text>
           <View style={textFieldContainer}>
           <TextInput
+              style={textField}
               placeholder="Name"
               autoComplete="name"
               textContentType="name"
@@ -69,6 +74,7 @@ const SignUpView = () => {
           </View>
           <View style={[textFieldContainer, {borderTopWidth: 0}]}>
           <TextInput
+              style={textField}
               placeholder="Email"
               autoComplete="email"
               keyboardType="email-address"
@@ -79,6 +85,7 @@ const SignUpView = () => {
           </View>
           <View style={[textFieldContainer, {borderTopWidth: 0}]}>
           <TextInput
+              style={textField}
               placeholder="Password"
               autoComplete="new-password"
               textContentType="newPassword"
@@ -89,6 +96,7 @@ const SignUpView = () => {
           </View>
           <View style={[textFieldContainer, {borderTopWidth: 0}]}>
           <TextInput
+              style={textField}
               placeholder="Repeat Password"
               autoComplete="new-password"
               textContentType="newPassword"

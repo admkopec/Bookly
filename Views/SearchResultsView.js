@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
+    ActionSheetIOS,
     ActivityIndicator, Image,
     Modal, Platform, PlatformColor,
     SafeAreaView,
@@ -75,7 +76,7 @@ const OffersView = () => {
   const [sections, setSections] = useState([]);
   const [selectedOffer, setSelectedOffer] = useState(null);
 
-  // Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
+    // Pagination using infinite scrolling: https://javascript.plainenglish.io/react-native-infinite-scroll-pagination-with-flatlist-e5fe5db6c1cb
   const update = () => {
     fetchOffers(service, searchCriteria, page)
       .then(offers => {

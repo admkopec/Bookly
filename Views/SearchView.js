@@ -1,6 +1,7 @@
 import React, {useContext, useState} from 'react';
 import type {Node} from 'react';
 import {
+  ActionSheetIOS,
   Button, Platform, PlatformColor,
   SafeAreaView,
   StatusBar,
@@ -18,6 +19,7 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import InlineButton from './Buttons/InlineButton';
 import StepperButton from "./Buttons/StepperButton";
 import {Picker} from '@react-native-picker/picker';
+import {logout} from "../Logic/AccountLogic";
 
 const inputLabelStyle = {
   flex: 1,
@@ -61,6 +63,26 @@ const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
     justifyContent: 'flex-end',
   };
 
+  const carTypeActionSheet = () => {
+    const options = ['Cancel', 'cabriolet', 'coupé', 'hatchback', 'limousine', 'minivan', 'pickup', 'sedan', 'roadster'];
+    ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: options,
+          cancelButtonIndex: 0,
+          userInterfaceStyle: isDarkMode ? 'dark' : 'light',
+        },
+        buttonIndex => {
+          if (buttonIndex === 0) {
+            // Cancel clicked
+            // ...
+          } else {
+            // Car Type clicked
+            setCarType(options[buttonIndex]);
+          }
+        },
+    );
+  }
+
   switch (service) {
     case 'flatly':
       return (
@@ -87,13 +109,11 @@ const AdditionalOptions = ({service, carlyState, parklyState, flatlyState}) => {
         <View style={inputLabelStyle}>
           <Text style={labelStyle(isDarkMode)}>Type</Text>
           {/* TODO: Add a Picker */}
-          <Picker
-              selectedValue={carType}
-              onValueChange={(itemValue, itemIndex) => setCarType(itemValue)}>
-            <Picker.Item label="Hatchback" value="hatchback" />
-            <Picker.Item label="Cabrio" value="cabrio" />
-            <Picker.Item label="SUV" value="suv" />
-          </Picker>
+          <InlineButton title={carType} onPress={() => {
+            if (Platform.OS === 'ios') {
+              carTypeActionSheet();
+            }
+          }} />
         </View>
       );
     case 'parkly':
