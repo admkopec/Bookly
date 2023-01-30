@@ -53,6 +53,7 @@ const BookingItem: ({booking: Booking, onPress: () => void}) => Node = ({booking
 };
 
 const BookingsView = ({route, navigation}) => {
+  // TODO: WHY `useState` doesn't UPDATE values!!!!!!
   const isDarkMode = useColorScheme() === 'dark';
   const [isInitialRender, setIsInitialRender] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -72,7 +73,7 @@ const BookingsView = ({route, navigation}) => {
         if (searchText.length > 0) {
           // Present search results
           // TODO: Make sure that searching will not preserve previous values when searchTextChanges
-          if (sectionsDraft[0].title === '' && page > 1) {
+          if (sectionsDraft[0] && sectionsDraft[0].title === '' && page > 1) {
             sectionsDraft[0].data = [...sectionsDraft[0].data, ...bookings];
           } else {
             sectionsDraft = [{title: '', data: bookings}];
