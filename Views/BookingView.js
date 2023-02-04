@@ -107,16 +107,18 @@ const BookingView = () => {
 
   return (
     <SafeAreaView style={[containerStyle, {marginHorizontal: 0}]}>
-      <View style={containerStyle}>
         {isLoading ? (
-          <View style={[groupBoxStyle, {flex: 1, marginTop: 220}]}>
+            <View style={containerStyle}>
+            <View style={[groupBoxStyle, {flex: 1, marginTop: 220}]}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
               <ActivityIndicator />
             </View>
           </View>
+            </View>
         ) : (
           <ScrollView>
-            <Image style={imageStyle} source={offer.imageUrl ?? require('../Images/Icon.png')} />
+            <Image style={imageStyle} source={offer.imageUrl ? {uri: offer.imageUrl} : require('../Images/Icon.png')} />
+            <View style={containerStyle}>
             <Text style={title}>{booking.name}</Text>
             <View style={groupBoxStyle}>
                 <Text style={body}>{offer.description}</Text>
@@ -155,9 +157,9 @@ const BookingView = () => {
                   )}
                 </View>
             </View>
+            </View>
           </ScrollView>
         )}
-      </View>
     </SafeAreaView>
   );
 };

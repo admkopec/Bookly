@@ -51,11 +51,12 @@ const OfferItem: ({offer: Offer, onPress: () => void}) => Node = ({offer, onPres
       height: 40,
       width: 40,
       marginRight: 10,
+      borderRadius: 6,
     }
     return (
     <TouchableOpacity style={cellContainer(isDarkMode)} onPress={onPress}>
         <View style={hStack}>
-        <Image style={imageStyle} source={offer.imageUrl ?? require('../Images/Icon.png')} width={40} height={40} />
+        <Image style={imageStyle} source={offer.imageUrl ? {uri: offer.imageUrl} : require('../Images/Icon.png')} width={40} height={40} />
             <View style={vStack}>
             <Text style={title}>{offer.name}</Text>
             <Text style={subtitle}>{offer.description}</Text>

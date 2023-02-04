@@ -117,7 +117,7 @@ const BookingsView = ({route, navigation}) => {
 
   useEffect(() => {
     update();
-  }, [page]);
+  }, [page, searchText]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -125,7 +125,6 @@ const BookingsView = ({route, navigation}) => {
         onChangeText: e => {
           setIsRefreshing(true);
           setSearchText(e.nativeEvent.text);
-          update();
         },
       },
     });
